@@ -1,6 +1,7 @@
 #ifndef DG_ARRAY_HPP
 #define DG_ARRAY_HPP
 
+#include "../rhs/temp.hpp"
 
 namespace DGHydro {
 
@@ -10,7 +11,6 @@ namespace DGHydro {
     // Default constructor
     Array() {
       data = new T[N];
-      //for (int i = 0; i < N; i++) data[i] = 0.0;
     };
     // Copy constructor
     Array(const Array& s) {
@@ -28,7 +28,7 @@ namespace DGHydro {
 
     // Copy assignment
     Array& operator=(const Array& s) {
-      data = new T[N];
+      //data = new T[N];
       for (int i = 0; i < N; i++) data[i] = s.data[i];
       return *this;
     }
