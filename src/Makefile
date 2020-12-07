@@ -34,7 +34,7 @@ CC=mpicxx
 # Standard compiler and linker flags
 CCFLAGS     := -O3 -std=c++11 -Wall
 #-Wno-unused-private-field -Wno-unused-function
-LDFLAGS     :=
+LDFLAGS     := -std=c++11
 #-lboost_program_options
 
 # Common includes and paths for CUDA
@@ -66,7 +66,7 @@ clean:
 
 %.o:%.cpp
 	$(CC) $(INCLUDES) $(CCFLAGS) -o $@ -c $<
-	$(CC) $(INCLUDES) -E -MT $@ -MM -o $*.d $<
+	$(CC) $(INCLUDES) $(CCFLAGS -E -MT $@ -MM -o $*.d $<
 
 # Keep .d files
 .PRECIOUS: %.d
