@@ -32,7 +32,7 @@ DEP = $(patsubst %.cpp,%.d,$(SRC))
 CC=mpicxx
 
 # Standard compiler and linker flags
-CCFLAGS     := -O3 -std=c++17 -Wall
+CCFLAGS     := -O3 -std=c++11 -Wall
 #-Wno-unused-private-field -Wno-unused-function
 LDFLAGS     :=
 #-lboost_program_options
