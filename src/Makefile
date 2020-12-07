@@ -66,7 +66,7 @@ clean:
 
 %.o:%.cpp
 	$(CC) $(INCLUDES) $(CCFLAGS) -o $@ -c $<
-	$(CC) $(INCLUDES) $(CCFLAGS -E -MT $@ -MM -o $*.d $<
+	$(CC) $(INCLUDES) $(CCFLAGS) -E -MT $@ -MM -o $*.d $<
 
 # Keep .d files
 .PRECIOUS: %.d
