@@ -14,7 +14,6 @@ namespace DGHydro {
   class RightHandSide {
   public:
     RightHandSide(Mesh *mesh) : mesh(mesh) {
-      //data = new Array<Array<double, nEq>, nDeg>[mesh->Nx*mesh->Ny*mesh->Nz];
       data = new MeshArray<Array<Array<double, nEq>, nDeg>>(mesh->Nx,
                                                             mesh->Ny,
                                                             mesh->Nz);
@@ -29,7 +28,6 @@ namespace DGHydro {
       (nDim == 2)*(maxOrder + 1)*(maxOrder + 2)/2 +
       (nDim == 3)*(maxOrder + 1)*(maxOrder + 2)*(maxOrder + 3)/6;
 
-    //void Calculate(Array<Array<double, nEq>, nDeg> *U) {
     void Calculate(MeshArray<Array<Array<double, nEq>, nDeg>>& U) {
 
       for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)
@@ -37,7 +35,7 @@ namespace DGHydro {
           for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++)
             data[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
               VolumeFluxIntegral(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i]);
-      /*
+
       for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++) {
         for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++) {
           for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++) {
@@ -58,7 +56,6 @@ namespace DGHydro {
           }
         }
       }
-      */
     }
 
     Array<Array<double, nEq>, nDeg> SurfaceFluxIntegralX(Array<Array<double, nEq>, nDeg>& s,
@@ -121,7 +118,6 @@ namespace DGHydro {
 
     Array<Array<double, nEq>, nDeg> VolumeFluxIntegral(Array<Array<double, nEq>, nDeg>& s) {
       Array<Array<double, nEq>, nDeg> result;
-      /*
       for (int j = 0; j < nDeg; j++) {
         // Function to integrate
         std::function<Array<double, nEq>(double, double, double)> f =
@@ -134,11 +130,9 @@ namespace DGHydro {
 
         result[j] = ci.vol3d(f);
       }
-      */
       return result;
     };
 
-    //Array<Array<double, nEq>, nDeg> *data;
     MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> *data;
   private:
     Flux<nEq> flux;
