@@ -108,7 +108,11 @@ Simulation::Simulation(char *fileName)
 
   MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> state(mesh->Nx, mesh->Ny, mesh->Nz);
 
+  std::cout << "MeshArray done" << std::endl;
+
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
+
+  std::cout << "RightHandSide done" << std::endl;
 
   rhs.Calculate(state);
 
