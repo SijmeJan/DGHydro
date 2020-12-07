@@ -42,7 +42,7 @@ namespace DGHydro {
     }
     // Assign to constant
     Array& operator=(const double& s) {
-      data = new T[N];
+      //data = new T[N];
       for (int i = 0; i < N; i++) data[i] = s;
       return *this;
     }

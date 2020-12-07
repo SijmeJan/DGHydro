@@ -123,6 +123,9 @@ Simulation::Simulation(char *fileName)
 
   std::cout << u << std::endl;
   */
+
+  delete cf;
+  delete mesh;
 }
 
 Simulation::~Simulation()
