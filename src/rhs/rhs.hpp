@@ -121,7 +121,7 @@ namespace DGHydro {
 
     Array<Array<double, nEq>, nDeg> VolumeFluxIntegral(Array<Array<double, nEq>, nDeg>& s) {
       Array<Array<double, nEq>, nDeg> result;
-
+      /*
       for (int j = 0; j < nDeg; j++) {
         // Function to integrate
         std::function<Array<double, nEq>(double, double, double)> f =
@@ -134,7 +134,7 @@ namespace DGHydro {
 
         result[j] = ci.vol3d(f);
       }
-
+      */
       return result;
     };
 
