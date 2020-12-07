@@ -16,6 +16,18 @@ int main(int argc, char** argv)
 
   // Walk through all command line arguments
   for (int i = 1; i < argc; ++i) {
+    std::string arg (argv[i]);
+
+    // Max wall clock hours
+    if (arg.compare(std::string("--wallclocklimit")) == 0 ||
+        arg.compare(std::string("-wcl")) == 0) {
+      maxWallClockHours = atof(argv[i+1]);
+      std::cout << "Maximum wall clock time: " << maxWallClockHours
+                << " hours" << std::endl;
+      nSwitches += 2;
+    }
+
+    /*
     // Max wall clock hours
     if (strcmp(argv[i], "--wallclocklimit") == 0 ||
         strcmp(argv[i], "-wcl") == 0) {
@@ -24,6 +36,7 @@ int main(int argc, char** argv)
                 << " hours" << std::endl;
       nSwitches += 2;
     }
+    */
   }
 
   // Check for correct number of arguments
