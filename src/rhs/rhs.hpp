@@ -31,6 +31,7 @@ namespace DGHydro {
 
     //void Calculate(Array<Array<double, nEq>, nDeg> *U) {
     void Calculate(MeshArray<Array<Array<double, nEq>, nDeg>>& U) {
+      /*
       for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)
         for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++)
           for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++)
@@ -57,7 +58,7 @@ namespace DGHydro {
           }
         }
       }
-
+      */
     }
 
     Array<Array<double, nEq>, nDeg> SurfaceFluxIntegralX(Array<Array<double, nEq>, nDeg>& s,
