@@ -31,13 +31,13 @@ namespace DGHydro {
 
     //void Calculate(Array<Array<double, nEq>, nDeg> *U) {
     void Calculate(MeshArray<Array<Array<double, nEq>, nDeg>>& U) {
-      /*
+
       for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)
         for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++)
           for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++)
             data[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
               VolumeFluxIntegral(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i]);
-
+      /*
       for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++) {
         for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++) {
           for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++) {
