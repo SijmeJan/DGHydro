@@ -1,3 +1,6 @@
+#ifndef DG_TEMP_HPP
+#define DG_TEMP_HPP
+
 #include <type_traits>
 #include <typeinfo>
 #ifndef _MSC_VER
@@ -33,3 +36,5 @@ type_name()
         r += "&&";
     return r;
 }
+
+#endif
