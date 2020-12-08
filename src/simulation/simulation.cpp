@@ -81,6 +81,7 @@ Simulation::Simulation(char *fileName)
     throw std::runtime_error("Could not create simulation");
   }
 
+  /*
   Array<double, 3> temp(0.0);
   Array<double, 3> temp2(1.0);
 
@@ -92,14 +93,17 @@ Simulation::Simulation(char *fileName)
   temp += f(1, 1, 1);
 
   std::cout << temp[0] << std::endl;
+  */
 
-  /*
   State<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> S(mesh);
   MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> state(mesh->Nx, mesh->Ny, mesh->Nz);
   state = 0.0;
 
   InitialConditions<UserSetup::nEq> ic(cf);
 
+  state[0] = S.DoF(0, 0, 0, ic);
+
+  /*
   for (int i = 0; i < mesh->Nx; i++)
     for (int j = 0; j < mesh->Ny; j++)
       for (int k = 0; k < mesh->Nz; k++) {
