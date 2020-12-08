@@ -112,11 +112,11 @@ Simulation::Simulation(char *fileName)
 
   std::cout << "MeshArray done" << std::endl;
 
-  //RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
+  RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
 
   std::cout << "RightHandSide done" << std::endl;
 
-  //rhs.Calculate(state);
+  rhs.Calculate(state);
   //rhs.Calculate();
 
   /*

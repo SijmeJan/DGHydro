@@ -17,6 +17,7 @@ namespace DGHydro {
       data = new MeshArray<Array<Array<double, nEq>, nDeg>>(mesh->Nx,
                                                             mesh->Ny,
                                                             mesh->Nz);
+      data[0] = 0.0;
     };
     ~RightHandSide() {
       delete data;
@@ -28,19 +29,15 @@ namespace DGHydro {
       (nDim == 2)*(maxOrder + 1)*(maxOrder + 2)/2 +
       (nDim == 3)*(maxOrder + 1)*(maxOrder + 2)*(maxOrder + 3)/6;
 
-    void Calculate(const MeshArray<Array<Array<double, nEq>, nDeg>>& U) {
-      //void Calculate() {
-
+    void Calculate(MeshArray<Array<Array<double, nEq>, nDeg>>& U) {
       std::cout << "Starting Calculate...\n";
-      VolumeFluxIntegral(U[0]);
-      /*
+
       for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)
         for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++)
           for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++)
             data[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
               VolumeFluxIntegral(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i]);
-      */
-      /*
+
       for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++) {
         for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++) {
           for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++) {
@@ -61,7 +58,6 @@ namespace DGHydro {
           }
         }
       }
-      */
 
       std::cout << "Ending Calculate...\n";
 
@@ -70,7 +66,7 @@ namespace DGHydro {
     Array<Array<double, nEq>, nDeg> SurfaceFluxIntegralX(Array<Array<double, nEq>, nDeg>& s,
                                                          Array<Array<double, nEq>, nDeg>& sL,
                                                          Array<Array<double, nEq>, nDeg>& sR) {
-      Array<Array<double, nEq>, nDeg> result;
+      Array<Array<double, nEq>, nDeg> result(0.0);
 
       for (int j = 0; j < nDeg; j++) {
         // Function to integrate
@@ -89,7 +85,7 @@ namespace DGHydro {
     Array<Array<double, nEq>, nDeg> SurfaceFluxIntegralY(Array<Array<double, nEq>, nDeg>& s,
                                                          Array<Array<double, nEq>, nDeg>& sL,
                                                          Array<Array<double, nEq>, nDeg>& sR) {
-      Array<Array<double, nEq>, nDeg> result;
+      Array<Array<double, nEq>, nDeg> result(0.0);
 
       for (int j = 0; j < nDeg; j++) {
         // Function to integrate
@@ -99,6 +95,8 @@ namespace DGHydro {
           return 0.25*(Fint_x(sL, s, x, z)*bf(j, x, -1, z) -
                        Fint_x(s, sR, x, z)*bf(j, x, 1, z))/mesh->dy;
         };
+
+        result[j] = ci.vol2d(f);
       }
 
       return result;
@@ -106,7 +104,7 @@ namespace DGHydro {
     Array<Array<double, nEq>, nDeg> SurfaceFluxIntegralZ(Array<Array<double, nEq>, nDeg>& s,
                                                          Array<Array<double, nEq>, nDeg>& sL,
                                                          Array<Array<double, nEq>, nDeg>& sR) {
-      Array<Array<double, nEq>, nDeg> result;
+      Array<Array<double, nEq>, nDeg> result(0.0);
 
       for (int j = 0; j < nDeg; j++) {
         // Function to integrate
@@ -123,43 +121,24 @@ namespace DGHydro {
       return result;
     };
 
-    Array<Array<double, nEq>, nDeg> VolumeFluxIntegral(const Array<Array<double, nEq>, nDeg>& s) {
-      std::cout << "Starting volume integral..." << std::endl;
+    Array<Array<double, nEq>, nDeg> VolumeFluxIntegral(Array<Array<double, nEq>, nDeg>& s) {
+      Array<Array<double, nEq>, nDeg> result(0.0);
 
-      Array<Array<double, nEq>, nDeg> result;
-
-      Array<double, nEq> B;
-
-      std::cout << "Hallo" << std::endl;
-
-      auto f = [] (Array<double, nEq> A) { return A; };
-
-      result[0] = f(B);
-
-      std::cout << "Hallo" << std::endl;
-
-      /*
       for (int j = 0; j < nDeg; j++) {
-        std::cout << "Loop over dofs\n";
-
         // Function to integrate
         std::function<Array<double, nEq>(double, double, double)> f =
           [&s, this, j] (double x, double y, double z) -> Array<double, nEq> {
 
-          return 0.25*flux.x(U(s, x, y, z))*bf.x_derivative(j, x, y, z)/mesh->dx +
-                 0.25*flux.y(U(s, x, y, z))*bf.y_derivative(j, x, y, z)/mesh->dy +
-                 0.25*flux.z(U(s, x, y, z))*bf.z_derivative(j, x, y, z)/mesh->dz;
+          double a = 0.25*bf.x_derivative(j, x, y, z)/mesh->dx;
+          double b = 0.25*bf.y_derivative(j, x, y, z)/mesh->dy;
+          double c = 0.25*bf.z_derivative(j, x, y, z)/mesh->dz;
+
+          Array<double, nEq> u = U(s, x, y, z);
+          return flux.x(u)*a + flux.y(u)*b + flux.z(u)*c;
         };
 
-        auto w = ci.vol3d(f);
-        std::cout << "Type of vol3d: " << type_name<decltype(w)>() << "\n";
-        result[j] = w;
-        std::cout << "Type of result: " << type_name<decltype(result[j])>() << "\n";
-
-
-        //result[j] = ci.vol3d(f);
+        result[j] = ci.vol3d(f);
       }
-      */
 
       return result;
     };
@@ -174,14 +153,20 @@ namespace DGHydro {
 
     // Calculate state from degrees of freedom
     Array<double, nEq> U(Array<Array<double, nEq>, nDeg>& s, double x, double y, double z) {
+      std::cout << "Starting U...\n";
+
       Array<double, nEq> result;
-      result = 0.0;
+      result = s[0]*bf(0, x, y, z);
 
       // Sum of components times basis function
-      for (int j = 0; j < nDeg; j++)
+      for (int j = 1; j < nDeg; j++)
         result += s[j]*bf(j, x, y, z);
 
-      return result*(1 << nDim);
+      result *= (1 << nDim);
+
+      std::cout << "Ending U...\n";
+
+      return result;
     }
 
     // LLF interface flux x

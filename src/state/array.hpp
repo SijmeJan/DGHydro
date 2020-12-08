@@ -27,6 +27,16 @@ namespace DGHydro {
       data = s.data;
       s.data = nullptr;
     }
+
+    // Constructor from double
+    Array(const double& s) {
+      std::cout << "Copy from double: allocating " << N
+                << " elements of type " << type_name<decltype(data[0])>() << "\n";
+      data = new T[N];
+
+      for (int i = 0; i < N; i++) data[i] = s;
+    }
+
     ~Array() {
       if (data != nullptr) {
         std::cout << "Deallocating " << N << " elements of type " << type_name<decltype(data[0])>() << "\n";
@@ -36,16 +46,19 @@ namespace DGHydro {
     };
 
     // Copy assignment
-    Array& operator=(const Array& s) {
-      std::cout << "Copy assignment\n";
+    Array& operator=(const Array<T,N>& s) {
+      std::cout << "Copy assignment from " << type_name<decltype(s)>()
+                << " to " << type_name<decltype(this)>() << "\n";
 
       if (data == nullptr) {
-        std::cout << "Copy assigment: allocating " << N << " elements of type " << type_name<decltype(data[0])>() << "\n";
+        std::cout << "Copy assigment: allocating " << N
+                  << " elements of type " << type_name<decltype(data[0])>() << "\n";
         data = new T[N];
       }
 
-      std::copy(s.data, &s.data[N-1], data);
-      //for (int i = 0; i < N; i++) data[i] = s.data[i];
+      //std::copy(s.data, &s.data[N-1], data);
+      for (int i = 0; i < N; i++) data[i] = s.data[i];
+
       return *this;
     }
     // Move assignment
