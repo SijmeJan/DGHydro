@@ -99,18 +99,12 @@ Simulation::Simulation(char *fileName)
   MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> state(mesh->Nx, mesh->Ny, mesh->Nz);
   state = 0.0;
 
+  // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
-
-  for (int i = 0; i < mesh->Nx; i++)
-    for (int j = 0; j < mesh->Ny; j++)
-      for (int k = 0; k < mesh->Nz; k++) {
+  for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)
+    for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++)
+      for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++)
         state[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] = S.DoF(i, j, k, ic);
-
-        std::cout << "i = " << i << " "
-                  << state[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][0][0] << "\n";
-      }
-
-  std::cout << "MeshArray done" << std::endl;
 
   /*
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);

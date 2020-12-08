@@ -16,7 +16,7 @@ namespace DGHydro {
     ~InitialConditions() {};
 
     Array<double, nEq> operator()(double x, double y, double z) {
-      return Array<double, nEq>(cos(2.0*M_PI*x));
+      return Array<double, nEq>(x);//(cos(2.0*M_PI*x));
     }
   private:
 };

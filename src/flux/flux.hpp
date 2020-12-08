@@ -11,7 +11,7 @@ namespace DGHydro {
     ~UserSetup() {};
 
     const static int nDim = 3;         // Number of space dimensions
-    const static int maxOrder = 0;     // Maximum order of polynomials
+    const static int maxOrder = 1;     // Maximum order of polynomials
     const static int nEq = 1;          // Number of equations
   };
 
