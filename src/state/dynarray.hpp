@@ -9,7 +9,7 @@ namespace DGHydro {
   public:
     // Default constructor
     DynArray(int N) : N(N) {
-      data = new T[N];
+      data = nullptr;//new T[N];
     };
     // Copy constructor
     DynArray(const DynArray& s) {
@@ -33,13 +33,17 @@ namespace DGHydro {
     DynArray& operator=(const DynArray& s) {
       N = s.N;
 
-      data = new T[N];
+      if (data == nullptr)
+        data = new T[N];
       for (int i = 0; i < N; i++) data[i] = s.data[i];
       return *this;
     }
     // Move assignment
     DynArray& operator=(DynArray&& s) {
       if (this != &s) {
+        if (data != nullptr)
+          delete[] data;
+
         N = s.N;
         data = s.data;
         s.data = nullptr;
@@ -48,7 +52,8 @@ namespace DGHydro {
     }
     // Assign to constant
     DynArray& operator=(const double& s) {
-      data = new T[N];
+      if (data == nullptr)
+        data = new T[N];
       for (int i = 0; i < N; i++) data[i] = s;
       return *this;
     }
