@@ -28,7 +28,7 @@ namespace DGHydro {
             std::cout << "Finished operation\n\n";
           }
 
-      //std::cout << res[0] << "\n";
+      std::cout << "Result of type " << type_name<decltype(res)>() << "\n";
       std::cout << "End of vol3d...\n\n";
 
       return res;
@@ -39,7 +39,7 @@ namespace DGHydro {
 
       for (int j = 0; j < nPoint; j++)
         for (int i = 0; i < nPoint; i++)
-          res += gq->w[j]*gq->w[i]*func(gq->x[i], gq->x[j]);
+          res += (gq->w[j]*gq->w[i])*func(gq->x[i], gq->x[j]);
 
       return res;
     };
