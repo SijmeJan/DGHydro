@@ -1,8 +1,8 @@
 # Directory to put binaries in
-BINDIR = /Users/sjp/Codes/DGHydro/bin
+BINDIR = $(HOME)/Codes/DGHydro/bin
 
 # Path to Boost library
-BOOST_PATH = /Users/sjp/Codes/DGHydro/libraries/boost_1_74_0
+BOOST_PATH = $(HOME)/Codes/DGHydro/libraries/boost_1_74_0
 
 # In case SHELL is inherited from OS
 SHELL = /bin/sh
