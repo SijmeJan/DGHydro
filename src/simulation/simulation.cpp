@@ -63,6 +63,7 @@ Simulation::Simulation(char *fileName)
   ConfigFile *cf;
   try {
     cf = new ConfigFile(fileName, rank);
+    std::cout << "Hallo\n";
     cf->List();
   }
   catch (...) {
@@ -81,21 +82,8 @@ Simulation::Simulation(char *fileName)
     throw std::runtime_error("Could not create simulation");
   }
 
-  /*
-  Array<double, 3> temp(0.0);
-  Array<double, 3> temp2(1.0);
-
-  std::function<Array<double, 3>(double, double, double)> f =
-    [temp2] (double x, double y, double z) -> Array<double, 3> {
-          return x*y*z*temp2;
-        };
-
-  temp += f(1, 1, 1);
-
-  std::cout << temp[0] << std::endl;
-  */
-
-  State<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> state(mesh);
+  State<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim>
+    state(mesh);
   MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>>
     mesh_state(mesh->Nx, mesh->Ny, mesh->Nz);
   mesh_state = 0.0;
@@ -109,38 +97,45 @@ Simulation::Simulation(char *fileName)
           state.DoF(i, j, k, ic);
 
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
+  //rhs.Calculate(mesh_state);
 
-  rhs.Calculate(mesh_state);
-  /*
-  Array<double, UserSetup::nEq> B;
-  B = 0.0;
+  TimeIntegrator<MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>>, UserSetup::timeOrder> ti;
 
-  std::cout << "Hallo" << std::endl;
+  double timestep = 1.0e10;
+  Flux<UserSetup::nEq> flux;
+  for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++) {
+    for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++) {
+      for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++) {
+        Array<double, UserSetup::nEq> s =
+          state.U(mesh_state[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
+                  0.0, 0.0, 0.0);
+        timestep = std::min(timestep, mesh->dx/flux.max_wave_speed_x(s));
+        timestep = std::min(timestep, mesh->dy/flux.max_wave_speed_y(s));
+        timestep = std::min(timestep, mesh->dz/flux.max_wave_speed_z(s));
+      }
+    }
+  }
 
-  auto f = [] (Array<double, UserSetup::nEq> A) { return A; };
+  timestep = cf->GetParameter<double>("courant_number")*timestep;
 
-  // Constructor, copy constructor, move constructor, move assignment  LEAK
-  Array<double, UserSetup::nEq> result;
-  result = f(B);
+  std::cout << "Time step: " << timestep << "\n";
 
-  std::cout << "Hallo " << result[0] << std::endl;
-  */
+  std::function<MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>>(double, MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>>)> L =
+                [&rhs](double t,
+              MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> U) -> MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>>
+    {
+    return rhs.Calculate(t, U);
+  };
 
 
-  //Array<Array<double, 1>, 1> result;
-  //result = 0.0;
+  ti.TakeStep(0.0, timestep, mesh_state, L);
 
-  //std::cout << result[0][0] << std::endl;
+  //double u = 1.0;
+  //for (int i = 0; i < 10; i++)
+  //  ti.TakeStep(0.0, 0.1, u, [](double t, double u){ return u; });
 
-  /*
-  //TimeIntegrator<double, 3> ti;
+  //std::cout << u << std::endl;
 
-  double u = 1.0;
-  for (int i = 0; i < 10; i++)
-    ti.TakeStep(0.0, 0.1, u, [](double t, double u){ return u; });
-
-  std::cout << u << std::endl;
-  */
 
   delete cf;
   delete mesh;

@@ -7,3 +7,5 @@ minY    0.0
 maxY    1.0
 minZ    0.0
 maxZ    1.0
+
+courant_number  0.5

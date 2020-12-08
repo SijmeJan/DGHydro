@@ -27,7 +27,7 @@ namespace DGHydro {
     }
 
     // Move constructor
-    MeshArray(MeshArray&& s) {
+    MeshArray(MeshArray&& s) : DynArray<T>(s) {
       //std::cout << "MeshArray move constructor\n";
       Nx = s.Nx;
       Ny = s.Ny;

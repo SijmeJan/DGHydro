@@ -38,9 +38,13 @@ ConfigFile::ConfigFile(char *fileName, int rank)
         iss >> firstWord;
         iss >> secondWord;
 
-        // Ignore comments
-        if (firstWord.at(0) != '#')
-          parameterMap.insert(std::make_pair(firstWord, std::stod(secondWord)));
+        // Ignore empty lines
+        if (firstWord.length() > 0) {
+          // Ignore comments
+          if (firstWord.at(0) != '#')
+            parameterMap.insert(std::make_pair(firstWord,
+                                               std::stod(secondWord)));
+        }
       }
     }
   }

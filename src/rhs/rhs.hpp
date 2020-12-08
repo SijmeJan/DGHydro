@@ -14,13 +14,13 @@ namespace DGHydro {
   class RightHandSide {
   public:
     RightHandSide(Mesh *mesh) : mesh(mesh) {
-      data = new MeshArray<Array<Array<double, nEq>, nDeg>>(mesh->Nx,
-                                                            mesh->Ny,
-                                                            mesh->Nz);
-      data[0] = 0.0;
+      //data = new MeshArray<Array<Array<double, nEq>, nDeg>>(mesh->Nx,
+      //                                                      mesh->Ny,
+      //                                                      mesh->Nz);
+      //data[0] = 0.0;
     };
     ~RightHandSide() {
-      delete data;
+      //delete data;
     };
 
     // Number of degrees of freedom
@@ -29,27 +29,34 @@ namespace DGHydro {
       (nDim == 2)*(maxOrder + 1)*(maxOrder + 2)/2 +
       (nDim == 3)*(maxOrder + 1)*(maxOrder + 2)*(maxOrder + 3)/6;
 
-    void Calculate(MeshArray<Array<Array<double, nEq>, nDeg>>& U) {
+    MeshArray<Array<Array<double, nEq>, nDeg>>
+    Calculate(double t, MeshArray<Array<Array<double, nEq>, nDeg>>& U) {
+      MeshArray<Array<Array<double, nEq>, nDeg>> data =
+        MeshArray<Array<Array<double, nEq>, nDeg>>(mesh->Nx,
+                                                   mesh->Ny,
+                                                   mesh->Nz);
+      data = 0.0;
+
       for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)
         for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++)
           for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++)
-            data[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
+            data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
               VolumeFluxIntegral(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i]);
 
       for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++) {
         for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++) {
           for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++) {
-            data[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
+            data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
               SurfaceFluxIntegralX(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                                    U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i - 1],
                                    U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i + 1]);
 
-            data[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
+            data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
               SurfaceFluxIntegralY(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                                    U[k*mesh->Nx*mesh->Ny + (j - 1)*mesh->Nx + i],
                                    U[k*mesh->Nx*mesh->Ny + (j + 1)*mesh->Nx + i]);
 
-            data[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
+            data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
               SurfaceFluxIntegralZ(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                                    U[(k - 1)*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                                    U[(k + 1)*mesh->Nx*mesh->Ny + j*mesh->Nx + i]);
@@ -57,6 +64,7 @@ namespace DGHydro {
         }
       }
 
+      return data;
     }
 
     Array<Array<double, nEq>, nDeg> SurfaceFluxIntegralX(Array<Array<double, nEq>, nDeg>& s,
@@ -139,7 +147,7 @@ namespace DGHydro {
       return result;
     };
 
-    MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> *data;
+    //MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> *data;
   private:
     Flux<nEq> flux;
     BasisFunctions<nDim, maxOrder> bf;

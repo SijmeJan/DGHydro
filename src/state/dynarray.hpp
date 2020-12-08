@@ -153,15 +153,15 @@ namespace DGHydro {
 
   // Scalar addition, subtraction and multiplication from the left
   template<class T>
-  DynArray<T> operator+(double const& scalar, DynArray<T> rhs) {
+  DynArray<T>& operator+(double const& scalar, DynArray<T> rhs) {
     return rhs += scalar; // calls rhs.operator+=(scalar);
   }
   template<class T>
-  DynArray<T> operator-(double const& scalar, DynArray<T> rhs) {
+  DynArray<T>& operator-(double const& scalar, DynArray<T> rhs) {
     return (-rhs) += scalar;
   }
   template<class T>
-  DynArray<T> operator*(double const& scalar, DynArray<T> rhs) {
+  DynArray<T>& operator*(double const& scalar, DynArray<T> rhs) {
     return rhs *= scalar; // calls rhs.operator*=(scalar);
   }
 }

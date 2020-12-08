@@ -25,7 +25,8 @@ namespace DGHydro {
     CubeIntegral<Array<double, nEq>, maxOrder + 1> ci;
 
     // Calculate state from degrees of freedom
-    Array<double, nEq> U(Array<Array<double, nEq>, nDeg>& s, double x, double y, double z) {
+    Array<double, nEq> U(Array<Array<double, nEq>, nDeg>& s,
+                         double x, double y, double z) {
       Array<double, nEq> result;
       result = s[0]*bf(0, x, y, z);
 
