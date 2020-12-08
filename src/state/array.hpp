@@ -89,23 +89,23 @@ namespace DGHydro {
 
     // Element-wise addition
     Array& operator+=(const Array& rhs) {
-      std::cout << "Adding array\n";
+      //std::cout << "Adding array\n";
       for (int i = 0; i < N; i++) data[i] += rhs.data[i];
       return *this;
     }
     friend Array operator+(Array lhs, const Array& rhs) {
-      std::cout << "Adding array 2\n";
+      //std::cout << "Adding array 2\n";
       lhs += rhs; // reuse compound assignment
       return lhs; // return the result by value (uses move constructor)
     }
     // Add scalar to every element
     Array& operator+=(const double& rhs) {
-      std::cout << "Adding scalar\n";
+      //std::cout << "Adding scalar\n";
       for (int i = 0; i < N; i++) data[i] += rhs;
       return *this;
     }
     friend Array operator+(Array lhs, const double& rhs) {
-      std::cout << "Adding scalar 2\n";
+      //std::cout << "Adding scalar 2\n";
       lhs += rhs; // reuse compound assignment
       return lhs; // return the result by value (uses move constructor)
     }
@@ -140,12 +140,12 @@ namespace DGHydro {
     }
     // Multiply every element by double
     Array& operator*=(const double& rhs) {
-      std::cout << "Multiplying array by double\n";
+      //std::cout << "Multiplying array by double\n";
       for (int i = 0; i < N; i++) data[i] *= rhs;
       return *this;
     }
     friend Array operator*(Array lhs, const double& rhs) {
-      std::cout << "Multiplying array by double 2\n";
+      //std::cout << "Multiplying array by double 2\n";
       lhs *= rhs; // reuse compound assignment
       return lhs; // return the result by value (uses move constructor)
     }
@@ -189,7 +189,7 @@ namespace DGHydro {
   // Scalar addition, subtraction and multiplication from the left
   template<class T, int N>
   Array<T, N>& operator+(double const& scalar, Array<T, N> rhs) {
-    std::cout << "Adding scalar from left\n";
+    //std::cout << "Adding scalar from left\n";
     return rhs += scalar; // calls rhs.operator+=(scalar);
   }
   template<class T, int N>
@@ -198,7 +198,7 @@ namespace DGHydro {
   }
   template<class T, int N>
   Array<T, N>& operator*(double const& scalar, Array<T, N> rhs) {
-    std::cout << "Multiplying array by double from left " << rhs[0] << "\n";
+    //std::cout << "Multiplying array by double from left " << rhs[0] << "\n";
     return rhs *= scalar; // calls rhs.operator*=(scalar);
   }
 }
