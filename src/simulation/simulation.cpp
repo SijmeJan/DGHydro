@@ -101,9 +101,6 @@ Simulation::Simulation(char *fileName)
 
   InitialConditions<UserSetup::nEq> ic(cf);
 
-  state[0] = S.DoF(0, 0, 0, ic);
-
-  /*
   for (int i = 0; i < mesh->Nx; i++)
     for (int j = 0; j < mesh->Ny; j++)
       for (int k = 0; k < mesh->Nz; k++) {
@@ -114,7 +111,7 @@ Simulation::Simulation(char *fileName)
       }
 
   std::cout << "MeshArray done" << std::endl;
-  */
+
   /*
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
 
