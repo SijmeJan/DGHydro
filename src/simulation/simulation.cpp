@@ -1,4 +1,4 @@
-#include <mpi.h>
+//#include <mpi.h>
 #include <iostream>
 
 #include "../state/array.hpp"
@@ -40,10 +40,10 @@ Simulation::Simulation(char *fileName)
   //fftw_mpi_init();
 
   // Get total number of CPUs and rank of current CPU
-  int num_proc, rank;
-  MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
+  int num_proc=1, rank=0;
+  //MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+  //MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  /*
   // Display MPI info
   int mpi_version,mpi_subversion;
   MPI_Get_version(&mpi_version, &mpi_subversion);
@@ -51,6 +51,8 @@ Simulation::Simulation(char *fileName)
     std::cout << "Running with MPI version " << mpi_version << "."
               << mpi_subversion << " with " << num_proc << " processes"
               << std::endl;
+  */
+
 
   // Read configuration file
   ConfigFile *cf;
@@ -104,22 +106,44 @@ Simulation::Simulation(char *fileName)
 
   //std::cout << bf.x_derivative(0, 0, 0, 0) << std::endl;
 
-  //state = new Array<Array<double, UserSetup::nEq>, nDeg>[mesh->Nx*mesh->Ny*mesh->Nz];
 
-  MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> state(mesh->Nx, mesh->Ny, mesh->Nz);
+  //MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> state(mesh->Nx, mesh->Ny, mesh->Nz);
 
   std::cout << "MeshArray done" << std::endl;
 
-  RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
+  //RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
 
   std::cout << "RightHandSide done" << std::endl;
 
-  rhs.Calculate(state);
+  //rhs.Calculate(state);
+  //rhs.Calculate();
 
-  std::cout << rhs.data[0][0][0][0] << std::endl;
+
+  Array<double, UserSetup::nEq> B;
+  B = 0.0;
+
+  std::cout << "Hallo" << std::endl;
+
+  auto f = [] (Array<double, UserSetup::nEq> A) { return A; };
+
+  // Copy constructor + move constructor
+  //Array<double, UserSetup::nEq> result = f(B);
+
+  // Constructor, copy constructor, move constructor, move assignment  LEAK
+  Array<double, UserSetup::nEq> result;
+  result = f(B);
+
+  std::cout << "Hallo " << result[0] << std::endl;
+
+
+
+  //Array<Array<double, 1>, 1> result;
+  //result = 0.0;
+
+  //std::cout << result[0][0] << std::endl;
 
   /*
-  TimeIntegrator<double, 3> ti;
+  //TimeIntegrator<double, 3> ti;
 
   double u = 1.0;
   for (int i = 0; i < 10; i++)
@@ -130,11 +154,12 @@ Simulation::Simulation(char *fileName)
 
   delete cf;
   delete mesh;
+
 }
 
 Simulation::~Simulation()
 {
-  delete[] state;
+  //delete[] state;
 }
 
 }

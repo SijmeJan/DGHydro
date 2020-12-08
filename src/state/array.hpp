@@ -10,31 +10,54 @@ namespace DGHydro {
   public:
     // Default constructor
     Array() {
-      data = new T[N];
+      data = nullptr;
     };
+
     // Copy constructor
     Array(const Array& s) {
+      std::cout << "Copy: allocating " << N << " elements of type " << type_name<decltype(data[0])>() << "\n";
       data = new T[N];
-      for (int i = 0; i < N; i++) data[i] = s.data[i];
+      std::copy(s.data, &s.data[N-1], data);
+      //for (int i = 0; i < N; i++) data[i] = s.data[i];
     }
+
     // Move constructor
     Array(Array&& s) {
+      std::cout << "Move constructor for type " << type_name<decltype(data[0])>() << "\n";
       data = s.data;
       s.data = nullptr;
     }
     ~Array() {
-      delete[] data;
+      if (data != nullptr) {
+        std::cout << "Deallocating " << N << " elements of type " << type_name<decltype(data[0])>() << "\n";
+
+        delete[] data;
+      }
     };
 
     // Copy assignment
     Array& operator=(const Array& s) {
-      //data = new T[N];
-      for (int i = 0; i < N; i++) data[i] = s.data[i];
+      std::cout << "Copy assignment\n";
+
+      if (data == nullptr) {
+        std::cout << "Copy assigment: allocating " << N << " elements of type " << type_name<decltype(data[0])>() << "\n";
+        data = new T[N];
+      }
+
+      std::copy(s.data, &s.data[N-1], data);
+      //for (int i = 0; i < N; i++) data[i] = s.data[i];
       return *this;
     }
     // Move assignment
     Array& operator=(Array&& s) {
+      std::cout << "Move assignment\n";
+
       if (this != &s) {
+        if (data != nullptr) {
+          std::cout << "Deallocating " << N << " elements of type " << type_name<decltype(data[0])>() << " in move assignment\n";
+          delete[] data;
+        }
+
         data = s.data;
         s.data = nullptr;
       }
@@ -42,7 +65,12 @@ namespace DGHydro {
     }
     // Assign to constant
     Array& operator=(const double& s) {
-      //data = new T[N];
+      std::cout << "Double assignment\n";
+
+      if (data == nullptr) {
+        std::cout << "Allocating " << N << " elements of type " << type_name<decltype(data[0])>() << " in double assignment\n";
+        data = new T[N];
+      }
       for (int i = 0; i < N; i++) data[i] = s;
       return *this;
     }
@@ -136,7 +164,8 @@ namespace DGHydro {
     }
 
   private:
-    T *data;
+    T *data = nullptr;
+    //std::unique_ptr<T> data;
   };
 
   // Scalar addition, subtraction and multiplication from the left

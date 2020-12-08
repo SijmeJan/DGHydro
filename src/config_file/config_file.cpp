@@ -1,4 +1,4 @@
-#include <mpi.h>
+//#include <mpi.h>
 
 #include <iostream>
 #include <fstream>
@@ -44,13 +44,13 @@ ConfigFile::ConfigFile(char *fileName, int rank)
   }
 
   // Broadcast warning to see if everything is OK
-  MPI_Bcast(&warning, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  //MPI_Bcast(&warning, 1, MPI_INT, 0, MPI_COMM_WORLD);
   if (warning != 0)
     throw std::runtime_error("Error opening configuration file");
 
   // Broadcast size of map to all processes
   int mapSize = parameterMap.size();
-  MPI_Bcast(&mapSize, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+  //MPI_Bcast(&mapSize, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
   // Iterate through all elements
   std::map<std::string, double>::iterator it = parameterMap.begin();
@@ -61,17 +61,17 @@ ConfigFile::ConfigFile(char *fileName, int rank)
       line = it->first;
       line_size = line.size();
     }
-    MPI_Bcast(&line_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    //MPI_Bcast(&line_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
     if (rank != 0)
       line.resize(line_size);
 
-    MPI_Bcast(const_cast<char*>(line.data()), line_size,
-              MPI_CHAR, 0, MPI_COMM_WORLD);
+    //MPI_Bcast(const_cast<char*>(line.data()), line_size,
+    //          MPI_CHAR, 0, MPI_COMM_WORLD);
 
     double value = 0.0;
     if (rank == 0)
       value = it->second;
-    MPI_Bcast(&value, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    //MPI_Bcast(&value, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     if (rank != 0)
       parameterMap.insert(std::make_pair(line, value));

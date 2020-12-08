@@ -29,7 +29,8 @@ DEP = $(patsubst %.cpp,%.d,$(SRC))
 # Compiler and linker flags
 ################################################################################
 
-CC=mpicxx
+CC=g++
+#mpicxx
 
 # Standard compiler and linker flags
 CCFLAGS     := -O3 -std=c++11 -Wall

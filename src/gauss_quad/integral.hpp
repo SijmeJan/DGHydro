@@ -16,15 +16,19 @@ namespace DGHydro {
     }
 
     T vol3d(std::function<T(double, double, double)> func) {
-      T res;
+      std::cout << "Volume integral...\n";
+
+      T res;         // Allocate 1 T
       res = 0.0;
 
       for (int k = 0; k < nPoint; k++)
         for (int j = 0; j < nPoint; j++)
-          for (int i = 0; i < nPoint; i++)
+          for (int i = 0; i < nPoint; i++) {
+            std::cout << i << " " << j << " " << k << "\n";
             res = res + gq->w[k]*gq->w[j]*gq->w[i]*func(gq->x[i],
                                                         gq->x[j],
                                                         gq->x[k]);
+          }
 
       return res;
     };

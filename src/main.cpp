@@ -1,11 +1,9 @@
-#include <mpi.h>
+//#include <mpi.h>
 
 #include <iostream>
 #include <map>
 #include <string>
 
-//#include "mesh/mesh.hpp"
-//#include "config_file/config_file.hpp"
 #include "simulation/simulation.hpp"
 
 int main(int argc, char** argv)
@@ -49,21 +47,24 @@ int main(int argc, char** argv)
   }
 
   // Initialize MPI
-  MPI_Init(&argc, &argv);
+  //MPI_Init(&argc, &argv);
 
   // Last argument should be input file name
   char *fileName = argv[argc-1];
 
+  DGHydro::Simulation *s;
   try {
-    DGHydro::Simulation *s = new DGHydro::Simulation(fileName);
+    s = new DGHydro::Simulation(fileName);
   }
   catch (std::exception& e) {
     std::cout << e.what() << '\n';
-    MPI_Finalize();
+    //MPI_Finalize();
     return 1;
   }
 
-  MPI_Finalize();
+  delete s;
+
+  //MPI_Finalize();
 
   return 0;
 }
