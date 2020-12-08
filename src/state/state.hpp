@@ -49,9 +49,10 @@ namespace DGHydro {
         std::function<Array<double, nEq>(double, double, double)> f =
           [this, func, n, i, j, k] (double x, double y, double z) -> Array<double, nEq> {
 
-          return func(2*(x - mesh->x[i])/mesh->dx,
-                      2*(y - mesh->y[j])/mesh->dy,
-                      2*(z - mesh->z[k])/mesh->dz);//*bf(n, x, y, z);
+          //return func(2*(x - mesh->x[i])/mesh->dx,
+          //            2*(y - mesh->y[j])/mesh->dy,
+          //            2*(z - mesh->z[k])/mesh->dz)*bf(n, x, y, z);
+          return func(0.0, 0.0, 0.0);
         };
 
         result[n] = ci.vol3d(f);
