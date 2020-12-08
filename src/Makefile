@@ -33,7 +33,7 @@ CC=g++
 #mpicxx
 
 # Standard compiler and linker flags
-CCFLAGS     := -O3 -std=c++11 -Wall
+CCFLAGS     := -g -O3 -std=c++11 -Wall
 #-Wno-unused-private-field -Wno-unused-function
 LDFLAGS     := -std=c++11
 #-lboost_program_options
