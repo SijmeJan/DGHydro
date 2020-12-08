@@ -30,8 +30,6 @@ namespace DGHydro {
       (nDim == 3)*(maxOrder + 1)*(maxOrder + 2)*(maxOrder + 3)/6;
 
     void Calculate(MeshArray<Array<Array<double, nEq>, nDeg>>& U) {
-      std::cout << "Starting Calculate...\n";
-
       for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)
         for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++)
           for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++)
@@ -58,8 +56,6 @@ namespace DGHydro {
           }
         }
       }
-
-      std::cout << "Ending Calculate...\n";
 
     }
 
@@ -153,8 +149,6 @@ namespace DGHydro {
 
     // Calculate state from degrees of freedom
     Array<double, nEq> U(Array<Array<double, nEq>, nDeg>& s, double x, double y, double z) {
-      std::cout << "Starting U...\n";
-
       Array<double, nEq> result;
       result = s[0]*bf(0, x, y, z);
 
@@ -163,8 +157,6 @@ namespace DGHydro {
         result += s[j]*bf(j, x, y, z);
 
       result *= (1 << nDim);
-
-      std::cout << "Ending U...\n";
 
       return result;
     }

@@ -1,4 +1,6 @@
-//#include <mpi.h>
+#ifdef USE_MPI
+#include <mpi.h>
+#endif
 
 #include <iostream>
 #include <map>
@@ -24,17 +26,6 @@ int main(int argc, char** argv)
                 << " hours" << std::endl;
       nSwitches += 2;
     }
-
-    /*
-    // Max wall clock hours
-    if (strcmp(argv[i], "--wallclocklimit") == 0 ||
-        strcmp(argv[i], "-wcl") == 0) {
-      maxWallClockHours = atof(argv[i+1]);
-      std::cout << "Maximum wall clock time: " << maxWallClockHours
-                << " hours" << std::endl;
-      nSwitches += 2;
-    }
-    */
   }
 
   // Check for correct number of arguments
@@ -46,8 +37,10 @@ int main(int argc, char** argv)
     return 1;
   }
 
+#ifdef USE_MPI
   // Initialize MPI
-  //MPI_Init(&argc, &argv);
+  MPI_Init(&argc, &argv);
+#endif
 
   // Last argument should be input file name
   char *fileName = argv[argc-1];
@@ -58,13 +51,17 @@ int main(int argc, char** argv)
   }
   catch (std::exception& e) {
     std::cout << e.what() << '\n';
-    //MPI_Finalize();
+#ifdef USE_MPI
+    MPI_Finalize();
+#endif
     return 1;
   }
 
   delete s;
 
-  //MPI_Finalize();
+#ifdef USE_MPI
+  MPI_Finalize();
+#endif
 
   return 0;
 }

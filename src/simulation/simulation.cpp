@@ -1,10 +1,13 @@
-//#include <mpi.h>
+#ifdef USE_MPI
+#include <mpi.h>
+#endif
 #include <iostream>
 
 #include "../state/array.hpp"
 #include "../state/dynarray.hpp"
+#include "../state/state.hpp"
 
-#include "../state/statefield.hpp"
+//#include "../state/statefield.hpp"
 #include "../state/basis.hpp"
 #include "simulation.hpp"
 #include "../config_file/config_file.hpp"
@@ -41,9 +44,10 @@ Simulation::Simulation(char *fileName)
 
   // Get total number of CPUs and rank of current CPU
   int num_proc=1, rank=0;
-  //MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
-  //MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  /*
+#ifdef USE_MPI
+  MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
   // Display MPI info
   int mpi_version,mpi_subversion;
   MPI_Get_version(&mpi_version, &mpi_subversion);
@@ -51,8 +55,9 @@ Simulation::Simulation(char *fileName)
     std::cout << "Running with MPI version " << mpi_version << "."
               << mpi_subversion << " with " << num_proc << " processes"
               << std::endl;
-  */
-
+#else
+  std::cout << "Not using MPI\n";
+#endif
 
   // Read configuration file
   ConfigFile *cf;
@@ -106,19 +111,30 @@ Simulation::Simulation(char *fileName)
 
   //std::cout << bf.x_derivative(0, 0, 0, 0) << std::endl;
 
-
+  State<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> S(mesh);
   MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> state(mesh->Nx, mesh->Ny, mesh->Nz);
   state = 0.0;
 
-  std::cout << "MeshArray done" << std::endl;
+  InitialConditions<UserSetup::nEq> ic(cf);
 
+  for (int i = 0; i < mesh->Nx; i++)
+    for (int j = 0; j < mesh->Ny; j++)
+      for (int k = 0; k < mesh->Nz; k++) {
+        state[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] = S.DoF(i, j, k, ic);
+
+        std::cout << "i = " << i << " "
+                  << state[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][0][0] << "\n";
+      }
+
+  std::cout << "MeshArray done" << std::endl;
+  /*
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
 
   std::cout << "RightHandSide done" << std::endl;
 
   rhs.Calculate(state);
   //rhs.Calculate();
-
+  */
   /*
   Array<double, UserSetup::nEq> B;
   B = 0.0;

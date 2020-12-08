@@ -10,13 +10,13 @@ namespace DGHydro {
   public:
     // Default constructor
     MeshArray(int Nx, int Ny, int Nz) : DynArray<T>(Nx*Ny*Nz), Nx(Nx), Ny(Ny), Nz(Nz)  {
-      std::cout << "MeshArray default constructor\n";
+      //std::cout << "MeshArray default constructor\n";
       N = Nx*Ny*Nz;
       //data = new T[N];
     };
     // Copy constructor
     MeshArray(const MeshArray& s) : DynArray<T>(s) {
-      std::cout << "MeshArray copy constructor\n";
+      //std::cout << "MeshArray copy constructor\n";
       Nx = s.Nx;
       Ny = s.Ny;
       Nz = s.Nz;
@@ -28,7 +28,7 @@ namespace DGHydro {
 
     // Move constructor
     MeshArray(MeshArray&& s) {
-      std::cout << "MeshArray move constructor\n";
+      //std::cout << "MeshArray move constructor\n";
       Nx = s.Nx;
       Ny = s.Ny;
       Nz = s.Nz;
@@ -39,14 +39,14 @@ namespace DGHydro {
     }
 
     ~MeshArray() {
-      std::cout << "MeshArray destructor" << std::endl;
+      //std::cout << "MeshArray destructor" << std::endl;
       //delete[] data;
     };
 
 
     // Copy assignment
     MeshArray& operator=(const MeshArray& s) {
-      std::cout << "MeshArray copy assignment\n";
+      //std::cout << "MeshArray copy assignment\n";
       Nx = s.Nx;
       Ny = s.Ny;
       Nz = s.Nz;
@@ -59,7 +59,7 @@ namespace DGHydro {
     }
     // Move assignment
     MeshArray& operator=(MeshArray&& s) {
-      std::cout << "MeshArray move assigment\n";
+      //std::cout << "MeshArray move assigment\n";
       if (this != &s) {
         Nx = s.Nx;
         Ny = s.Ny;
@@ -73,7 +73,7 @@ namespace DGHydro {
     }
     // Assign to constant
     MeshArray& operator=(const double& s) {
-      std::cout << "MeshArray constant assignment\n";
+      //std::cout << "MeshArray constant assignment\n";
 
       data = new T[N];
       for (int i = 0; i < N; i++) data[i] = s;

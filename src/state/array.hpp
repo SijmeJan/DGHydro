@@ -15,23 +15,22 @@ namespace DGHydro {
 
     // Copy constructor
     Array(const Array& s) {
-      std::cout << "Copy: allocating " << N << " elements of type " << type_name<decltype(data[0])>() << "\n";
+      //std::cout << "Copy: allocating " << N << " elements of type " << type_name<decltype(data[0])>() << "\n";
       data = new T[N];
       std::copy(s.data, &s.data[N-1], data);
-      //for (int i = 0; i < N; i++) data[i] = s.data[i];
     }
 
     // Move constructor
     Array(Array&& s) {
-      std::cout << "Move constructor for type " << type_name<decltype(data[0])>() << "\n";
+      //std::cout << "Move constructor for type " << type_name<decltype(data[0])>() << "\n";
       data = s.data;
       s.data = nullptr;
     }
 
     // Constructor from double
     Array(const double& s) {
-      std::cout << "Copy from double: allocating " << N
-                << " elements of type " << type_name<decltype(data[0])>() << "\n";
+      //std::cout << "Copy from double: allocating " << N
+      //          << " elements of type " << type_name<decltype(data[0])>() << "\n";
       data = new T[N];
 
       for (int i = 0; i < N; i++) data[i] = s;
@@ -39,7 +38,7 @@ namespace DGHydro {
 
     ~Array() {
       if (data != nullptr) {
-        std::cout << "Deallocating " << N << " elements of type " << type_name<decltype(data[0])>() << "\n";
+        //std::cout << "Deallocating " << N << " elements of type " << type_name<decltype(data[0])>() << "\n";
 
         delete[] data;
       }
@@ -47,27 +46,27 @@ namespace DGHydro {
 
     // Copy assignment
     Array& operator=(const Array<T,N>& s) {
-      std::cout << "Copy assignment from " << type_name<decltype(s)>()
-                << " to " << type_name<decltype(this)>() << "\n";
+      //std::cout << "Copy assignment from " << type_name<decltype(s)>()
+      //          << " to " << type_name<decltype(this)>() << "\n";
 
       if (data == nullptr) {
-        std::cout << "Copy assigment: allocating " << N
-                  << " elements of type " << type_name<decltype(data[0])>() << "\n";
+        //std::cout << "Copy assigment: allocating " << N
+        //          << " elements of type " << type_name<decltype(data[0])>() << "\n";
         data = new T[N];
       }
 
-      //std::copy(s.data, &s.data[N-1], data);
-      for (int i = 0; i < N; i++) data[i] = s.data[i];
+      std::copy(s.data, &s.data[N-1], data);
+      //for (int i = 0; i < N; i++) data[i] = s.data[i];
 
       return *this;
     }
     // Move assignment
     Array& operator=(Array&& s) {
-      std::cout << "Move assignment\n";
+      //std::cout << "Move assignment\n";
 
       if (this != &s) {
         if (data != nullptr) {
-          std::cout << "Deallocating " << N << " elements of type " << type_name<decltype(data[0])>() << " in move assignment\n";
+          //std::cout << "Deallocating " << N << " elements of type " << type_name<decltype(data[0])>() << " in move assignment\n";
           delete[] data;
         }
 
@@ -78,10 +77,10 @@ namespace DGHydro {
     }
     // Assign to constant
     Array& operator=(const double& s) {
-      std::cout << "Double assignment\n";
+      //std::cout << "Double assignment\n";
 
       if (data == nullptr) {
-        std::cout << "Allocating " << N << " elements of type " << type_name<decltype(data[0])>() << " in double assignment\n";
+        //std::cout << "Allocating " << N << " elements of type " << type_name<decltype(data[0])>() << " in double assignment\n";
         data = new T[N];
       }
       for (int i = 0; i < N; i++) data[i] = s;
@@ -137,10 +136,12 @@ namespace DGHydro {
     }
     // Multiply every element by double
     Array& operator*=(const double& rhs) {
+      std::cout << "Multiplying array by double\n";
       for (int i = 0; i < N; i++) data[i] *= rhs;
       return *this;
     }
     friend Array operator*(Array lhs, const double& rhs) {
+      std::cout << "Multiplying array by double 2\n";
       lhs *= rhs; // reuse compound assignment
       return lhs; // return the result by value (uses move constructor)
     }
@@ -192,6 +193,7 @@ namespace DGHydro {
   }
   template<class T, int N>
   Array<T, N> operator*(double const& scalar, Array<T, N> rhs) {
+    std::cout << "Multiplying array by double from left\n";
     return rhs *= scalar; // calls rhs.operator*=(scalar);
   }
 }
