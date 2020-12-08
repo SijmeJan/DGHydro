@@ -81,36 +81,19 @@ Simulation::Simulation(char *fileName)
     throw std::runtime_error("Could not create simulation");
   }
 
-  //state = new StateField<1,1>(mesh->Nx, mesh->Ny, mesh->Nz);
+  Array<double, 3> temp(0.0);
+  Array<double, 3> temp2(1.0);
 
-  //InitialConditions ic = InitialConditions(cf);
-  //for (int i = 0; i < mesh->Nx; i++) {
-  //  state->get<0,0>(i) = ic(mesh->x[i], 0, 0)[0];
-  //}
+  std::function<Array<double, 3>(double, double, double)> f =
+    [temp2] (double x, double y, double z) -> Array<double, 3> {
+          return x*y*z*temp2;
+        };
 
-  //for (int i = 0; i < mesh->Nx; i++) {
-  //  std::cout << state->get<0,0>(i) << " ";
-  //}
+  temp += f(1, 1, 1);
 
-  //GaussQuad *gq = new GaussQuad(5);
-  //const int N = 1;
-  //CubeIntegral<State<N>, 5> *ci = new CubeIntegral<State<N>, 5>;
-  //State<N> s;
+  std::cout << temp[0] << std::endl;
 
-  //s = 2*(s + 1.0);
-
-  //std::cout << ([s](double x) -> State<N> { return s + x; })(4.0)[0] << std::endl;
-
-  //std::function<State<N>(double)> f = [&s] (double x) -> State<N> { return State<N>(s + 1.0);};
-
-  //State<N> res = ci->vol1d(f);
-  //std::cout << res[0] << std::endl;
-
-
-  //BasisFunctions<1, 2> bf;
-
-  //std::cout << bf.x_derivative(0, 0, 0, 0) << std::endl;
-
+  /*
   State<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> S(mesh);
   MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> state(mesh->Nx, mesh->Ny, mesh->Nz);
   state = 0.0;
@@ -127,6 +110,7 @@ Simulation::Simulation(char *fileName)
       }
 
   std::cout << "MeshArray done" << std::endl;
+  */
   /*
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
 

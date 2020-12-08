@@ -24,8 +24,10 @@ namespace DGHydro {
         for (int j = 0; j < nPoint; j++)
           for (int i = 0; i < nPoint; i++) {
             std::cout << "\nStarting operation\n";
-            res += (gq->w[k]*gq->w[j]*gq->w[i])*func(gq->x[i], gq->x[j], gq->x[k]);//*(gq->w[k]*gq->w[j]*gq->w[i]);
-            std::cout << "Finished operation\n\n";
+            T temp(0.0);
+            temp = (gq->w[k]*gq->w[j]*gq->w[i])*func(gq->x[i], gq->x[j], gq->x[k]);
+            res += temp;
+            std::cout << "Finished operation " << temp[0] << "\n\n";
           }
 
       std::cout << res[0] << "\n";
