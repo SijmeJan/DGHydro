@@ -55,7 +55,7 @@ namespace DGHydro {
           return Array<double, nEq>(1.0);
         };
 
-        result[n] = ci.vol3d(f);
+        result[n] = f(0,0,0);// ci.vol3d(f);
       }
 
       result *= (nDim << 1);
