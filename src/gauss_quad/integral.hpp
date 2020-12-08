@@ -29,7 +29,7 @@ namespace DGHydro {
           }
 
       std::cout << "Result of type " << type_name<decltype(res[0])>()
-                << ", value " << res[0] << "\n";
+                << ", value " << *(res[0]) << "\n";
       std::cout << "End of vol3d...\n\n";
 
       return res;
