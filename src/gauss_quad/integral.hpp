@@ -20,6 +20,8 @@ namespace DGHydro {
 
       T res(0.0);         // Allocate 1 T
 
+      return res;
+
       for (int k = 0; k < nPoint; k++)
         for (int j = 0; j < nPoint; j++)
           for (int i = 0; i < nPoint; i++) {

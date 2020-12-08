@@ -52,10 +52,9 @@ namespace DGHydro {
           return func(2*(x - mesh->x[i])/mesh->dx,
                       2*(y - mesh->y[j])/mesh->dy,
                       2*(z - mesh->z[k])/mesh->dz)*bf(n, x, y, z);
-          //return Array<double, nEq>(1.0);
         };
 
-        result[n] = f(0,0,0);// ci.vol3d(f);
+        result[n] = ci.vol3d(f);
       }
 
       result *= (nDim << 1);
