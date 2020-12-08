@@ -199,7 +199,7 @@ namespace DGHydro {
   template<class T, int N>
   Array<T, N> operator*(double const& scalar, Array<T, N> rhs) {
     std::cout << "Multiplying array by double from left " << rhs[0] << "\n";
-    return rhs *= scalar; // calls rhs.operator*=(scalar);
+    return (rhs *= scalar); // calls rhs.operator*=(scalar);
   }
 }
 
