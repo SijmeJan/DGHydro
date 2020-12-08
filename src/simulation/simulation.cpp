@@ -95,25 +95,22 @@ Simulation::Simulation(char *fileName)
   std::cout << temp[0] << std::endl;
   */
 
-  State<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> S(mesh);
-  MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> state(mesh->Nx, mesh->Ny, mesh->Nz);
-  state = 0.0;
+  State<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> state(mesh);
+  MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>>
+    mesh_state(mesh->Nx, mesh->Ny, mesh->Nz);
+  mesh_state = 0.0;
 
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
   for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)
     for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++)
       for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++)
-        state[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] = S.DoF(i, j, k, ic);
+        mesh_state[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
+          state.DoF(i, j, k, ic);
 
-  /*
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
 
-  std::cout << "RightHandSide done" << std::endl;
-
-  rhs.Calculate(state);
-  //rhs.Calculate();
-  */
+  rhs.Calculate(mesh_state);
   /*
   Array<double, UserSetup::nEq> B;
   B = 0.0;
