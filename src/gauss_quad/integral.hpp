@@ -30,7 +30,9 @@ namespace DGHydro {
           }
       */
 
-      std::cout << "Result of type " << type_name<decltype(res[0])>()
+      res += (gq->w[0]*gq->w[0]*gq->w[0])*func(gq->x[0], gq->x[0], gq->x[0]);
+
+      std::cout << "Result of type " << type_name<decltype(res)>()
                 << ", value " << res[0] << "\n";
       std::cout << "End of vol3d...\n\n";
 
