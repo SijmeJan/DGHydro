@@ -20,6 +20,7 @@ namespace DGHydro {
 
       T res(0.0);         // Allocate 1 T
 
+      /*
       for (int k = 0; k < nPoint; k++)
         for (int j = 0; j < nPoint; j++)
           for (int i = 0; i < nPoint; i++) {
@@ -27,9 +28,10 @@ namespace DGHydro {
             res += (gq->w[k]*gq->w[j]*gq->w[i])*func(gq->x[i], gq->x[j], gq->x[k]);
             std::cout << "Finished operation\n\n";
           }
+      */
 
       std::cout << "Result of type " << type_name<decltype(res[0])>()
-                << ", value " << *(res[0]) << "\n";
+                << ", value " << res[0] << "\n";
       std::cout << "End of vol3d...\n\n";
 
       return res;
