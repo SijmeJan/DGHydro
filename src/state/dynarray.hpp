@@ -54,6 +54,7 @@ namespace DGHydro {
     DynArray& operator=(const double& s) {
       if (data == nullptr)
         data = new T[N];
+
       for (int i = 0; i < N; i++) data[i] = s;
       return *this;
     }
