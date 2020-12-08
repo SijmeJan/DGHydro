@@ -188,12 +188,12 @@ namespace DGHydro {
 
   // Scalar addition, subtraction and multiplication from the left
   template<class T, int N>
-  Array<T, N> operator+(double const& scalar, Array<T, N> rhs) {
+  Array<T, N>& operator+(double const& scalar, Array<T, N> rhs) {
     std::cout << "Adding scalar from left\n";
     return rhs += scalar; // calls rhs.operator+=(scalar);
   }
   template<class T, int N>
-  Array<T, N> operator-(double const& scalar, Array<T, N> rhs) {
+  Array<T, N>& operator-(double const& scalar, Array<T, N> rhs) {
     return (-rhs) += scalar;
   }
   template<class T, int N>
