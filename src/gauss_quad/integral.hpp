@@ -30,7 +30,7 @@ namespace DGHydro {
           }
       */
 
-      res = func(gq->x[0], gq->x[0], gq->x[0]);
+      res = 8.0*func(gq->x[0], gq->x[0], gq->x[0]);
 
       std::cout << "Result of type " << type_name<decltype(res)>()
                 << ", value " << res[0] << "\n";
