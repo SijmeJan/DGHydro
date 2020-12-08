@@ -17,7 +17,7 @@ namespace DGHydro {
       (UserSetup::nDim == 2)*(UserSetup::maxOrder + 1)*(UserSetup::maxOrder + 2)/2 +
       (UserSetup::nDim == 3)*(UserSetup::maxOrder + 1)*(UserSetup::maxOrder + 2)*(UserSetup::maxOrder + 3)/6;
 
-    Array<Array<double, UserSetup::nEq>, nDeg> *state;
+    //Array<Array<double, UserSetup::nEq>, nDeg> *state;
 
   };
 

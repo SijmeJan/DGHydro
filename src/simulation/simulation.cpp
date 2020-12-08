@@ -107,7 +107,8 @@ Simulation::Simulation(char *fileName)
   //std::cout << bf.x_derivative(0, 0, 0, 0) << std::endl;
 
 
-  //MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> state(mesh->Nx, mesh->Ny, mesh->Nz);
+  MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> state(mesh->Nx, mesh->Ny, mesh->Nz);
+  state = 0.0;
 
   std::cout << "MeshArray done" << std::endl;
 
@@ -118,7 +119,7 @@ Simulation::Simulation(char *fileName)
   //rhs.Calculate(state);
   //rhs.Calculate();
 
-
+  /*
   Array<double, UserSetup::nEq> B;
   B = 0.0;
 
@@ -126,15 +127,12 @@ Simulation::Simulation(char *fileName)
 
   auto f = [] (Array<double, UserSetup::nEq> A) { return A; };
 
-  // Copy constructor + move constructor
-  //Array<double, UserSetup::nEq> result = f(B);
-
   // Constructor, copy constructor, move constructor, move assignment  LEAK
   Array<double, UserSetup::nEq> result;
   result = f(B);
 
   std::cout << "Hallo " << result[0] << std::endl;
-
+  */
 
 
   //Array<Array<double, 1>, 1> result;
