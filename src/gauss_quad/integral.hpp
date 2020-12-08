@@ -20,20 +20,15 @@ namespace DGHydro {
 
       T res(0.0);         // Allocate 1 T
 
-      res += (gq->w[0]*gq->w[0]*gq->w[0])*func(0,0,0);
-      return res;
-
       for (int k = 0; k < nPoint; k++)
         for (int j = 0; j < nPoint; j++)
           for (int i = 0; i < nPoint; i++) {
             std::cout << "\nStarting operation\n";
-            T temp(0.0);
-            temp = (gq->w[k]*gq->w[j]*gq->w[i])*func(gq->x[i], gq->x[j], gq->x[k]);
-            res += temp;
+            res += (gq->w[k]*gq->w[j]*gq->w[i])*func(gq->x[i], gq->x[j], gq->x[k]);
             std::cout << "Finished operation " << temp[0] << "\n\n";
           }
 
-      std::cout << res[0] << "\n";
+      //std::cout << res[0] << "\n";
       std::cout << "End of vol3d...\n\n";
 
       return res;
