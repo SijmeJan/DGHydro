@@ -20,7 +20,7 @@ namespace DGHydro {
 
       T res(0.0);         // Allocate 1 T
 
-      res += func(0,0,0);
+      res += (gq->w[0]*gq->w[0]*gq->w[0])*func(0,0,0);
       return res;
 
       for (int k = 0; k < nPoint; k++)
