@@ -29,12 +29,12 @@ namespace DGHydro {
       (nDim == 2)*(maxOrder + 1)*(maxOrder + 2)/2 +
       (nDim == 3)*(maxOrder + 1)*(maxOrder + 2)*(maxOrder + 3)/6;
 
-    MeshArray<Array<Array<double, nEq>, nDeg>>
-    Calculate(double t, MeshArray<Array<Array<double, nEq>, nDeg>>& U) {
-      MeshArray<Array<Array<double, nEq>, nDeg>> data =
-        MeshArray<Array<Array<double, nEq>, nDeg>>(mesh->Nx,
-                                                   mesh->Ny,
-                                                   mesh->Nz);
+    DynArray<Array<Array<double, nEq>, nDeg>>
+    Calculate(double t, DynArray<Array<Array<double, nEq>, nDeg>>& U) {
+      DynArray<Array<Array<double, nEq>, nDeg>> data =
+        DynArray<Array<Array<double, nEq>, nDeg>>(mesh->Nx*
+                                                  mesh->Ny*
+                                                  mesh->Nz);
       data = 0.0;
 
       for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)

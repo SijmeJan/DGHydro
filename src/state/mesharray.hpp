@@ -4,7 +4,7 @@
 #include "./dynarray.hpp"
 
 namespace DGHydro {
-
+  /*
   template<class T>
   class MeshArray: public DynArray<T> {
   public:
@@ -81,95 +81,6 @@ namespace DGHydro {
       return *this;
     }
 
-    /*
-    // Element-wise addition
-    MeshArray& operator+=(const MeshArray& rhs) {
-      data += rhs.data;
-      return *this;
-    }
-    friend MeshArray operator+(MeshArray lhs, const MeshArray& rhs) {
-      lhs += rhs; // reuse compound assignment
-      return lhs; // return the result by value (uses move constructor)
-    }
-    // Add scalar to every element
-    MeshArray& operator+=(const double& rhs) {
-      data += rhs;
-      return *this;
-    }
-    friend MeshArray operator+(MeshArray lhs, const double& rhs) {
-      lhs += rhs; // reuse compound assignment
-      return lhs; // return the result by value (uses move constructor)
-    }
-
-    // Element-wise subtraction
-    MeshArray& operator-=(const MeshArray& rhs) {
-      data -= rhs.data;
-      return *this;
-    }
-    friend MeshArray operator-(MeshArray lhs, const MeshArray& rhs) {
-      lhs -= rhs; // reuse compound assignment
-      return lhs; // return the result by value (uses move constructor)
-    }
-    // Subtract scalar from every element
-    MeshArray& operator-=(const double& rhs) {
-      data -= rhs;
-      return *this;
-    }
-    friend MeshArray operator-(MeshArray lhs, const double& rhs) {
-      lhs -= rhs; // reuse compound assignment
-      return lhs; // return the result by value (uses move constructor)
-    }
-
-    // Element-wise multiplication
-    MeshArray& operator*=(const MeshArray& rhs) {
-      data[i] *= rhs.data;
-      return *this;
-    }
-    friend MeshArray operator*(MeshArray lhs, const MeshArray& rhs) {
-      lhs *= rhs; // reuse compound assignment
-      return lhs; // return the result by value (uses move constructor)
-    }
-    // Multiply every element by double
-    MeshArray& operator*=(const double& rhs) {
-      data *= rhs;
-      return *this;
-    }
-    friend MeshArray operator*(MeshArray lhs, const double& rhs) {
-      lhs *= rhs; // reuse compound assignment
-      return lhs; // return the result by value (uses move constructor)
-    }
-
-    // Element-wise division
-    MeshArray& operator/=(const MeshArray& rhs) {
-      data /= rhs.data;
-      return *this;
-    }
-    friend MeshArray operator/(MeshArray lhs, const MeshArray& rhs) {
-      lhs /= rhs; // reuse compound assignment
-      return lhs; // return the result by value (uses move constructor)
-    }
-    // Divide all elements by double
-    MeshArray& operator/=(const double& rhs) {
-      data /= rhs;
-      return *this;
-    }
-    friend MeshArray operator/(MeshArray lhs, const double& rhs) {
-      lhs /= rhs; // reuse compound assignment
-      return lhs; // return the result by value (uses move constructor)
-    }
-
-    // MeshArray subscript operator
-    T& operator[](std::size_t idx) { return data[idx]; }
-    const T& operator[](std::size_t idx) const { return data[idx]; }
-
-    // Negation operator
-    MeshArray operator-() {
-      MeshArray s;
-      s.data = -data;
-
-      return s;
-    }
-    */
   protected:
     using DynArray<T>::N;
     using DynArray<T>::data;
@@ -178,20 +89,6 @@ namespace DGHydro {
     //T *data;
   };
 
-  /*
-  // Scalar addition, subtraction and multiplication from the left
-  template<class T>
-  MeshArray<T> operator+(double const& scalar, MeshArray<T> rhs) {
-    return rhs += scalar; // calls rhs.operator+=(scalar);
-  }
-  template<class T>
-  MeshArray<T> operator-(double const& scalar, MeshArray<T> rhs) {
-    return (-rhs) += scalar;
-  }
-  template<class T>
-  MeshArray<T> operator*(double const& scalar, MeshArray<T> rhs) {
-    return rhs *= scalar; // calls rhs.operator*=(scalar);
-  }
   */
 }
 

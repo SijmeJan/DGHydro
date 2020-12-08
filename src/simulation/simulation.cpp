@@ -84,8 +84,8 @@ Simulation::Simulation(char *fileName)
 
   State<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim>
     state(mesh);
-  MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>>
-    mesh_state(mesh->Nx, mesh->Ny, mesh->Nz);
+  DynArray<Array<Array<double, UserSetup::nEq>, nDeg>>
+    mesh_state(mesh->Nx*mesh->Ny*mesh->Nz);
   mesh_state = 0.0;
 
   // Set initial conditions
@@ -97,21 +97,20 @@ Simulation::Simulation(char *fileName)
           state.DoF(i, j, k, ic);
 
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
-  //rhs.Calculate(mesh_state);
 
-  TimeIntegrator<MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>>, UserSetup::timeOrder> ti;
+  TimeIntegrator<DynArray<Array<Array<double, UserSetup::nEq>, nDeg>>, UserSetup::timeOrder> ti;
 
   double timestep = 1.0e10;
   Flux<UserSetup::nEq> flux;
   for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++) {
     for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++) {
       for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++) {
-        Array<double, UserSetup::nEq> s =
+        Array<double, UserSetup::nEq> u =
           state.U(mesh_state[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                   0.0, 0.0, 0.0);
-        timestep = std::min(timestep, mesh->dx/flux.max_wave_speed_x(s));
-        timestep = std::min(timestep, mesh->dy/flux.max_wave_speed_y(s));
-        timestep = std::min(timestep, mesh->dz/flux.max_wave_speed_z(s));
+        timestep = std::min(timestep, mesh->dx/flux.max_wave_speed_x(u));
+        timestep = std::min(timestep, mesh->dy/flux.max_wave_speed_y(u));
+        timestep = std::min(timestep, mesh->dz/flux.max_wave_speed_z(u));
       }
     }
   }
@@ -120,13 +119,12 @@ Simulation::Simulation(char *fileName)
 
   std::cout << "Time step: " << timestep << "\n";
 
-  std::function<MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>>(double, MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>>)> L =
+  std::function<DynArray<Array<Array<double, UserSetup::nEq>, nDeg>>(double, DynArray<Array<Array<double, UserSetup::nEq>, nDeg>>)> L =
                 [&rhs](double t,
-              MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>> U) -> MeshArray<Array<Array<double, UserSetup::nEq>, nDeg>>
+                       DynArray<Array<Array<double, UserSetup::nEq>, nDeg>> U) -> DynArray<Array<Array<double, UserSetup::nEq>, nDeg>>
     {
     return rhs.Calculate(t, U);
   };
-
 
   ti.TakeStep(0.0, timestep, mesh_state, L);
 

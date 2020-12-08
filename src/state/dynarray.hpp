@@ -9,7 +9,7 @@ namespace DGHydro {
   public:
     // Default constructor
     DynArray(int N) : N(N) {
-      data = nullptr;//new T[N];
+      data = nullptr;
     };
     // Copy constructor
     DynArray(const DynArray& s) {
