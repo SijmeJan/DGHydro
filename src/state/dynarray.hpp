@@ -9,6 +9,7 @@ namespace DGHydro {
   public:
     // Default constructor
     DynArray(int N) : N(N) {
+      //std::cout << "Default constructor" << std::endl;
       data = nullptr;
     };
     // Copy constructor
@@ -17,20 +18,27 @@ namespace DGHydro {
 
       data = new T[N];
       for (int i = 0; i < N; i++) data[i] = s.data[i];
+
+      //std::cout << "Copy constructor for " << s.N << " elements of type "
+      //          << type_name<decltype(data[0])>() << "\n";
+
     }
     // Move constructor
     DynArray(DynArray&& s) {
+      //std::cout << "Move constructor" << std::endl;
       N = s.N;
 
       data = s.data;
       s.data = nullptr;
     }
     ~DynArray() {
+      //std::cout << "Destructor" << std::endl;
       delete[] data;
     };
 
     // Copy assignment
     DynArray& operator=(const DynArray& s) {
+      //std::cout << "Copy assignment" << std::endl;
       N = s.N;
 
       if (data == nullptr)
@@ -40,6 +48,7 @@ namespace DGHydro {
     }
     // Move assignment
     DynArray& operator=(DynArray&& s) {
+      //std::cout << "Move assignment" << std::endl;
       if (this != &s) {
         if (data != nullptr)
           delete[] data;
@@ -52,6 +61,7 @@ namespace DGHydro {
     }
     // Assign to constant
     DynArray& operator=(const double& s) {
+      //std::cout << "Constant assignment" << std::endl;
       if (data == nullptr)
         data = new T[N];
 
@@ -61,19 +71,23 @@ namespace DGHydro {
 
     // Element-wise addition
     DynArray& operator+=(const DynArray& rhs) {
+      //std::cout << "Addition 1" << std::endl;
       for (int i = 0; i < N; i++) data[i] += rhs.data[i];
       return *this;
     }
     friend DynArray operator+(DynArray lhs, const DynArray& rhs) {
+      //std::cout << "Addition 2" << std::endl;
       lhs += rhs; // reuse compound assignment
       return lhs; // return the result by value (uses move constructor)
     }
     // Add scalar to every element
     DynArray& operator+=(const double& rhs) {
+      //std::cout << "Addition scalar 1" << std::endl;
       for (int i = 0; i < N; i++) data[i] += rhs;
       return *this;
     }
     friend DynArray operator+(DynArray lhs, const double& rhs) {
+      //std::cout << "Addition scalar 2" << std::endl;
       lhs += rhs; // reuse compound assignment
       return lhs; // return the result by value (uses move constructor)
     }
@@ -99,15 +113,18 @@ namespace DGHydro {
 
     // Element-wise multiplication
     DynArray& operator*=(const DynArray& rhs) {
+      //std::cout << "Multiplication 1" << std::endl;
       for (int i = 0; i < N; i++) data[i] *= rhs.data[i];
       return *this;
     }
     friend DynArray operator*(DynArray lhs, const DynArray& rhs) {
+      //std::cout << "Multiplication 2" << std::endl;
       lhs *= rhs; // reuse compound assignment
       return lhs; // return the result by value (uses move constructor)
     }
     // Multiply every element by double
     DynArray& operator*=(const double& rhs) {
+      //std::cout << "Multiplication scalar 1 " << N << " " << data << std::endl;
       for (int i = 0; i < N; i++) data[i] *= rhs;
       return *this;
     }
@@ -149,7 +166,7 @@ namespace DGHydro {
 
   protected:
     int N;
-    T *data;
+    T *data = nullptr;
   };
 
   // Scalar addition, subtraction and multiplication from the left
@@ -163,7 +180,8 @@ namespace DGHydro {
   }
   template<class T>
   DynArray<T>& operator*(double const& scalar, DynArray<T> rhs) {
-    return rhs *= scalar; // calls rhs.operator*=(scalar);
+    //std::cout << "Multiplication scalar left" << std::endl;
+     return rhs *= scalar; // calls rhs.operator*=(scalar);
   }
 }
 
