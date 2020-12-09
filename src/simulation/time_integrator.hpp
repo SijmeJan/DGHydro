@@ -15,7 +15,7 @@ namespace DGHydro {
                   double timestep, T& U,
                   std::function<T(double, T)> L) {
       if (order == 1) {
-        U = 0.1*U; //L(start_time, U)*timestep;
+        U = L(start_time, U)*timestep;
       }
       /*
       if (order == 2) {
