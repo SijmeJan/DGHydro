@@ -13,6 +13,8 @@ Mesh::Mesh(ConfigFile *cf)
 
   try {
     Nx = cf->GetParameter<int>("Nx") + 2*nGhost;
+    startX = nGhost;
+    endX = Nx - nGhost;
   }
   catch (std::exception& e) {
     std::cout << e.what() << '\n';
@@ -21,16 +23,24 @@ Mesh::Mesh(ConfigFile *cf)
 
   try {
     Ny = cf->GetParameter<int>("Ny") + 2*nGhost;
+    startY = nGhost;
+    endY = Ny - nGhost;
   }
   catch (std::exception& e) {
     Ny = 1;
+    startY = 0;
+    endY = 1;
   }
 
   try {
     Nz = cf->GetParameter<int>("Nz") + 2*nGhost;
+    startZ = nGhost;
+    endZ = Nz - nGhost;
   }
   catch (std::exception& e) {
     Nz = 1;
+    startZ = 0;
+    endZ = 1;
   }
 
   x = new double[Nx];

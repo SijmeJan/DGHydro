@@ -32,29 +32,29 @@ namespace DGHydro {
         DynArray<t_state_deg>(mesh->Nx*mesh->Ny*mesh->Nz);
       data = 0.0;
 
-      for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)
-        for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++)
-          for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++)
+      for (int i = mesh->startX; i < mesh->endX; i++)
+        for (int j = mesh->startY; j < mesh->endY; j++)
+          for (int k = mesh->startZ; k < mesh->endZ; k++)
             data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
               VolumeFluxIntegral(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i]);
 
-      for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++) {
-        for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++) {
-          for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++) {
+      for (int i = mesh->startX; i < mesh->endX; i++) {
+        for (int j = mesh->startY; j < mesh->endY; j++) {
+          for (int k = mesh->startZ; k < mesh->endZ; k++) {
             data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
               SurfaceFluxIntegralX(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                                    U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i - 1],
                                    U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i + 1]);
 
             data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
-              SurfaceFluxIntegralY(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
-                                   U[k*mesh->Nx*mesh->Ny + (j - 1)*mesh->Nx + i],
-                                   U[k*mesh->Nx*mesh->Ny + (j + 1)*mesh->Nx + i]);
+              SurfaceFluxIntegralY(U[k*mesh->Nx*mesh->Ny +j*mesh->Nx + i],
+                                   U[k*mesh->Nx*mesh->Ny + (j-1)*mesh->Nx + i],
+                                   U[k*mesh->Nx*mesh->Ny + (j+1)*mesh->Nx + i]);
 
             data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
               SurfaceFluxIntegralZ(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
-                                   U[(k - 1)*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
-                                   U[(k + 1)*mesh->Nx*mesh->Ny + j*mesh->Nx + i]);
+                                   U[(k-1)*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
+                                   U[(k+1)*mesh->Nx*mesh->Ny + j*mesh->Nx + i]);
           }
         }
       }

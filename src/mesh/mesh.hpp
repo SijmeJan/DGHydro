@@ -21,6 +21,10 @@ namespace DGHydro {
 
     int Nx, Ny, Nz, nGhost;
 
+    int startX, endX;
+    int startY, endY;
+    int startZ, endZ;
+
   private:
   };
 

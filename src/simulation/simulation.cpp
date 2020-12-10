@@ -81,9 +81,9 @@ Simulation::Simulation(char *fileName)
 
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
-  for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)
-    for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++)
-      for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++)
+  for (int i = mesh->startX; i < mesh->endX; i++)
+    for (int j = mesh->startY; j < mesh->endY; j++)
+      for (int k = mesh->startZ; k < mesh->endZ; k++)
         mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
           state->DoF(i, j, k, ic);
 
@@ -123,10 +123,10 @@ double Simulation::CalcTimeStep()
 {
   double timestep = 1.0e10;
   Flux<UserSetup::nEq> flux;
-  for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++) {
-    for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++) {
-      for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++) {
-        Array<double, UserSetup::nEq> u =
+  for (int i = mesh->startX; i < mesh->endX; i++) {
+    for (int j = mesh->startY; j < mesh->endY; j++) {
+      for (int k = mesh->startZ; k < mesh->endZ; k++) {
+        t_state u =
           state->U(mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                    0.0, 0.0, 0.0);
         timestep = std::min(timestep, mesh->dx/flux.max_wave_speed_x(u));
