@@ -45,9 +45,10 @@ void GaussQuad::FindAbscissae()
     // Divide up interval: each contains a single zero
     double a = -1.0 + i*dx;
     double b = -1.0 + (i + 1)*dx;
-    /*
+
     // Find zero by bisection
-    while (1) {
+    for (int N = 0; N < 10000; N++) {
+      //while (1) {
       double c = 0.5*(a + b);
 
       double f = boost::math::legendre_p(n, c);
@@ -63,7 +64,7 @@ void GaussQuad::FindAbscissae()
         b = c;
       }
     }
-    */
+
   }
 
 }
