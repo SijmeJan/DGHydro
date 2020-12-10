@@ -46,8 +46,6 @@ void GaussQuad::FindAbscissae()
     double a = -1.0 + i*dx;
     double b = -1.0 + (i + 1)*dx;
 
-    x[i] = 0.0;
-
     // Find zero by bisection
     while (1) {
       double c = 0.5*(a + b);
@@ -77,6 +75,7 @@ void GaussQuad::FindAbscissae()
 void GaussQuad::FindWeights()
 {
   for (int i = 0; i < n; i++) {
+    x[i] = 0.0;
     // Derivative of Legendre polynomial
     double p_prime = n*(x[i]*boost::math::legendre_p(n, x[i]) -
                         boost::math::legendre_p(n - 1, x[i]))/(x[i]*x[i]-1.0);
