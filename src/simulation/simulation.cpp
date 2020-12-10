@@ -109,13 +109,10 @@ Simulation::Simulation(char *fileName)
     return rhs.Calculate(t, U);
   };
 
-  std::cout << "Starting time loop" << std::endl;
-
   double time = 0.0;
   while (time < 1.0) {
     double timestep = CalcTimeStep();
 
-    std::cout << "Hallo\n";
     ti.TakeStep(time, timestep, mesh_state[0], L);
 
     time += timestep;
@@ -140,6 +137,8 @@ double Simulation::CalcTimeStep()
   for (int i = mesh->startX; i < mesh->endX; i++) {
     for (int j = mesh->startY; j < mesh->endY; j++) {
       for (int k = mesh->startZ; k < mesh->endZ; k++) {
+        std::cout << i << " " << j << " " << k << std::endl;
+
         t_state u =
           state->U(mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                    0.0, 0.0, 0.0);
