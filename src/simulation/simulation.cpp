@@ -109,10 +109,13 @@ Simulation::Simulation(char *fileName)
     return rhs.Calculate(t, U);
   };
 
+  std::cout << "Starting time loop" << std::endl;
+
   double time = 0.0;
   while (time < 1.0) {
     double timestep = CalcTimeStep();
 
+    std::cout << "Hallo\n";
     ti.TakeStep(time, timestep, mesh_state[0], L);
 
     time += timestep;
