@@ -142,6 +142,7 @@ double Simulation::CalcTimeStep()
         t_state u =
           state->U(mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                    0.0, 0.0, 0.0);
+        std::cout << "Done\n";
         timestep = std::min(timestep, mesh->dx/flux.max_wave_speed_x(u));
         timestep = std::min(timestep, mesh->dy/flux.max_wave_speed_y(u));
         timestep = std::min(timestep, mesh->dz/flux.max_wave_speed_z(u));
