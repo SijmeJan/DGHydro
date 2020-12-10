@@ -18,7 +18,7 @@ namespace DGHydro {
 
     // Number of degrees of freedom
     const static int nDeg =
-      (nDim == 1)*maxOrder +
+      (nDim == 1)*(maxOrder + 1) +
       (nDim == 2)*(maxOrder + 1)*(maxOrder + 2)/2 +
       (nDim == 3)*(maxOrder + 1)*(maxOrder + 2)*(maxOrder + 3)/6;
   };
