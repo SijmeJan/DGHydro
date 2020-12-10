@@ -15,8 +15,8 @@ GaussQuad::GaussQuad(int n) : n(n)
   if (n <= 0)
     throw std::runtime_error("Can not create Gaussian Quadrature with a number of point that is not positive");
 
-  x = new double[n];
-  w = new double[n];
+  //x = new double[n];
+  //w = new double[n];
 
   FindAbscissae();
   FindWeights();
