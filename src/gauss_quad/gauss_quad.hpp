@@ -5,7 +5,7 @@ namespace DGHydro {
 
   class GaussQuad {
   public:
-    GaussQuad(int _n);
+    GaussQuad(int n);
     ~GaussQuad(void);
 
     int n;
