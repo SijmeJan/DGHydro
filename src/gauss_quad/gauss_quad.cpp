@@ -53,7 +53,7 @@ void GaussQuad::FindAbscissae()
       double f = boost::math::legendre_p(n, c);
 
       if (f == 0.0 || 0.5*(b - a) < tol) {
-        x[i] = c;
+        //x[i] = c;
         break;
       }
 
