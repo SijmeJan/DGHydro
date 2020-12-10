@@ -12,8 +12,8 @@ namespace DGHydro {
 
 GaussQuad::GaussQuad(int n) : n(n)
 {
-  //if (n <= 0)
-  //  throw std::runtime_error("Can not create Gaussian Quadrature with a number of point that is not positive");
+  if (n <= 0)
+    throw std::runtime_error("Can not create Gaussian Quadrature with a number of point that is not positive");
 
   x = new double[n];
   w = new double[n];
@@ -38,6 +38,8 @@ GaussQuad::~GaussQuad()
 
 void GaussQuad::FindAbscissae()
 {
+  if (x == nullptr) x = new double[n];
+
   double dx = 2.0/(double) n;
   double tol = 1.0e-12;
 
@@ -74,6 +76,8 @@ void GaussQuad::FindAbscissae()
 
 void GaussQuad::FindWeights()
 {
+  if (w == nullptr) w = new double[n];
+
   for (int i = 0; i < n; i++) {
     // Derivative of Legendre polynomial
     double p_prime = n*(x[i]*boost::math::legendre_p(n, x[i]) -
