@@ -9,7 +9,8 @@ namespace DGHydro {
     ~GaussQuad(void);
 
     int n;
-    double *x, *w;
+    double *x = nullptr;
+    double *w = nullptr;
 
   private:
     void FindAbscissae();

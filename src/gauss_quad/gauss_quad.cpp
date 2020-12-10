@@ -16,8 +16,6 @@ namespace DGHydro {
     throw std::runtime_error("Can not create Gaussian Quadrature with a number of point that is not positive");
 
   x = new double[n];
-  for (int i = 0; i < n; i ++) x[i] = 0.0;
-
   w = new double[n];
 
   FindAbscissae();
