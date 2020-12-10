@@ -10,7 +10,7 @@ namespace DGHydro {
     UserSetup() {};
     ~UserSetup() {};
 
-    const static int nDim = 3;         // Number of space dimensions
+    const static int nDim = 1;         // Number of space dimensions
     const static int maxOrder = 0;     // Maximum order of polynomials
     const static int nEq = 1;          // Number of equations
     const static int timeOrder = 1;    // Order of time integration
