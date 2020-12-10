@@ -46,6 +46,7 @@ void GaussQuad::FindAbscissae()
     double a = -1.0 + i*dx;
     double b = -1.0 + (i + 1)*dx;
 
+    x[i] = 0.0;
     // Find zero by bisection
     while (1) {
       double c = 0.5*(a + b);
