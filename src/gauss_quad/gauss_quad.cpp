@@ -38,7 +38,6 @@ GaussQuad::~GaussQuad()
 
 void GaussQuad::FindAbscissae()
 {
-  /*
   double dx = 2.0/(double) n;
   double tol = 1.0e-12;
 
@@ -46,7 +45,7 @@ void GaussQuad::FindAbscissae()
     // Divide up interval: each contains a single zero
     double a = -1.0 + i*dx;
     double b = -1.0 + (i + 1)*dx;
-
+    /*
     // Find zero by bisection
     while (1) {
       double c = 0.5*(a + b);
@@ -64,8 +63,9 @@ void GaussQuad::FindAbscissae()
         b = c;
       }
     }
+    */
   }
-  */
+
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
