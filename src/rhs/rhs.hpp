@@ -73,34 +73,68 @@ namespace DGHydro {
       t_state_deg result(0.0);
 
       for (int j = 0; j < nDeg; j++) {
-        // Function to integrate
-        std::function<t_state(double, double)> f =
-          [&s, &sL, &sR, this, j] (double y, double z) -> t_state {
+        // 3D: integrate over 2D surface
+        if (nDim == 3) {
+          // Function to integrate
+          std::function<t_state(double, double)> f =
+            [&s, &sL, &sR, this, j] (double y, double z) -> t_state {
 
-          return 0.25*(Fint_x(sL, s, y, z)*bf(j, -1, y, z) -
-                       Fint_x(s, sR, y, z)*bf(j, 1, y, z))/mesh->dx;
-        };
+            return 0.25*(Fint_x(sL, s, y, z)*bf(j, -1, y, z) -
+                         Fint_x(s, sR, y, z)*bf(j, 1, y, z))/mesh->dx;
+          };
 
-        result[j] = ci.vol2d(f);
+          result[j] = ci.vol2d(f);
+        }
+        // 2D: integrate over 1D line
+        if (nDim == 2) {
+          // Function to integrate
+          std::function<t_state(double)> f =
+            [&s, &sL, &sR, this, j] (double y) -> t_state {
+
+            return 0.5*(Fint_x(sL, s, y, 0)*bf(j, -1, y, 0) -
+                         Fint_x(s, sR, y, 0)*bf(j, 1, y, 0))/mesh->dx;
+          };
+
+          result[j] = ci.vol1d(f);
+        }
+        // 1D: no integration necessary
+        if (nDim == 1) {
+          result[j] = (Fint_x(sL, s, 0, 0)*bf(j, -1, 0, 0) -
+                       Fint_x(s, sR, 0, 0)*bf(j, 1, 0, 0))/mesh->dx;
+        }
       }
 
       return result;
     };
+
     t_state_deg SurfaceFluxIntegralY(t_state_deg& s,
                                      t_state_deg& sL,
                                      t_state_deg& sR) {
       t_state_deg result(0.0);
 
       for (int j = 0; j < nDeg; j++) {
-        // Function to integrate
-        std::function<t_state(double, double)> f =
-          [&s, &sL, &sR, this, j] (double x, double z) -> t_state {
+        if (nDim == 3) {
+          // Function to integrate
+          std::function<t_state(double, double)> f =
+            [&s, &sL, &sR, this, j] (double x, double z) -> t_state {
 
-          return 0.25*(Fint_x(sL, s, x, z)*bf(j, x, -1, z) -
-                       Fint_x(s, sR, x, z)*bf(j, x, 1, z))/mesh->dy;
-        };
+            return 0.25*(Fint_x(sL, s, x, z)*bf(j, x, -1, z) -
+                         Fint_x(s, sR, x, z)*bf(j, x, 1, z))/mesh->dy;
+          };
 
-        result[j] = ci.vol2d(f);
+          result[j] = ci.vol2d(f);
+        }
+        if (nDim == 2) {
+          // Function to integrate
+          std::function<t_state(double)> f =
+            [&s, &sL, &sR, this, j] (double x) -> t_state {
+
+            return 0.5*(Fint_x(sL, s, x, 0)*bf(j, x, -1, 0) -
+                        Fint_x(s, sR, x, 0)*bf(j, x, 1, 0))/mesh->dy;
+          };
+
+          result[j] = ci.vol1d(f);
+        }
       }
 
       return result;
@@ -129,19 +163,48 @@ namespace DGHydro {
       t_state_deg result(0.0);
 
       for (int j = 0; j < nDeg; j++) {
-        // Function to integrate
-        std::function<t_state(double, double, double)> f =
-          [&s, this, j] (double x, double y, double z) -> t_state {
+        if (nDim == 3) {
+          // Function to integrate
+          std::function<t_state(double, double, double)> f =
+            [&s, this, j] (double x, double y, double z) -> t_state {
 
-          double a = 0.25*bf.x_derivative(j, x, y, z)/mesh->dx;
-          double b = 0.25*bf.y_derivative(j, x, y, z)/mesh->dy;
-          double c = 0.25*bf.z_derivative(j, x, y, z)/mesh->dz;
+            double a = 0.25*bf.x_derivative(j, x, y, z)/mesh->dx;
+            double b = 0.25*bf.y_derivative(j, x, y, z)/mesh->dy;
+            double c = 0.25*bf.z_derivative(j, x, y, z)/mesh->dz;
 
-          t_state u = U(s, x, y, z);
-          return flux.x(u)*a + flux.y(u)*b + flux.z(u)*c;
-        };
+            t_state u = U(s, x, y, 0);
+            return flux.x(u)*a + flux.y(u)*b + flux.z(u)*c;
+          };
 
-        result[j] = ci.vol3d(f);
+          result[j] = ci.vol3d(f);
+        }
+        if (nDim == 2) {
+          // Function to integrate
+          std::function<t_state(double, double)> f =
+            [&s, this, j] (double x, double y) -> t_state {
+
+            double a = 0.5*bf.x_derivative(j, x, y, 0)/mesh->dx;
+            double b = 0.5*bf.y_derivative(j, x, y, 0)/mesh->dy;
+
+            t_state u = U(s, x, y, 0);
+            return flux.x(u)*a + flux.y(u)*b;
+          };
+
+          result[j] = ci.vol2d(f);
+        }
+        if (nDim == 1) {
+          // Function to integrate
+          std::function<t_state(double)> f =
+            [&s, this, j] (double x) -> t_state {
+
+            double a = bf.x_derivative(j, x, 0, 0)/mesh->dx;
+
+            t_state u = U(s, x, 0, 0);
+            return flux.x(u)*a;
+          };
+
+          result[j] = ci.vol1d(f);
+        }
       }
 
       return result;
