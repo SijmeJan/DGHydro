@@ -38,26 +38,31 @@ namespace DGHydro {
             data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
               VolumeFluxIntegral(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i]);
 
-      for (int i = mesh->startX; i < mesh->endX; i++) {
-        for (int j = mesh->startY; j < mesh->endY; j++) {
-          for (int k = mesh->startZ; k < mesh->endZ; k++) {
+      for (int i = mesh->startX; i < mesh->endX; i++)
+        for (int j = mesh->startY; j < mesh->endY; j++)
+          for (int k = mesh->startZ; k < mesh->endZ; k++)
             data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
               SurfaceFluxIntegralX(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                                    U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i - 1],
                                    U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i + 1]);
 
-            data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
-              SurfaceFluxIntegralY(U[k*mesh->Nx*mesh->Ny +j*mesh->Nx + i],
-                                   U[k*mesh->Nx*mesh->Ny + (j-1)*mesh->Nx + i],
-                                   U[k*mesh->Nx*mesh->Ny + (j+1)*mesh->Nx + i]);
+      if (nDim > 1)
+        for (int i = mesh->startX; i < mesh->endX; i++)
+          for (int j = mesh->startY; j < mesh->endY; j++)
+            for (int k = mesh->startZ; k < mesh->endZ; k++)
+              data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
+                SurfaceFluxIntegralY(U[k*mesh->Nx*mesh->Ny+ j*mesh->Nx + i],
+                                     U[k*mesh->Nx*mesh->Ny+(j-1)*mesh->Nx + i],
+                                     U[k*mesh->Nx*mesh->Ny+(j+1)*mesh->Nx + i]);
 
-            data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
-              SurfaceFluxIntegralZ(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
-                                   U[(k-1)*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
-                                   U[(k+1)*mesh->Nx*mesh->Ny + j*mesh->Nx + i]);
-          }
-        }
-      }
+      if (nDim > 2)
+        for (int i = mesh->startX; i < mesh->endX; i++)
+          for (int j = mesh->startY; j < mesh->endY; j++)
+            for (int k = mesh->startZ; k < mesh->endZ; k++)
+              data[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] +=
+                SurfaceFluxIntegralZ(U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
+                                     U[(k-1)*mesh->Nx*mesh->Ny+j*mesh->Nx + i],
+                                     U[(k+1)*mesh->Nx*mesh->Ny+j*mesh->Nx + i]);
 
       return data;
     }

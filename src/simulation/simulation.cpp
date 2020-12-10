@@ -70,6 +70,17 @@ Simulation::Simulation(char *fileName)
     throw std::runtime_error("Could not create simulation");
   }
 
+  if (mesh->Ny == 1 && UserSetup::nDim > 1) {
+    delete mesh;
+    delete cf;
+    throw std::runtime_error("Need Ny in config file for multidimensional simulation");
+  }
+  if (mesh->Nz == 1 && UserSetup::nDim == 3) {
+    delete mesh;
+    delete cf;
+    throw std::runtime_error("Need Nz in config file for 3-dimensional simulation");
+  }
+
   state = new State<UserSetup::nEq,
                     UserSetup::maxOrder,
                     UserSetup::nDim>(mesh);
