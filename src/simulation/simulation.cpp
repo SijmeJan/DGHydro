@@ -3,22 +3,17 @@
 #endif
 #include <iostream>
 
-#include "../state/array.hpp"
-#include "../state/dynarray.hpp"
+#include "../array/array.hpp"
+#include "../array/dynarray.hpp"
 #include "../state/state.hpp"
 
-//#include "../state/statefield.hpp"
-#include "../state/basis.hpp"
 #include "simulation.hpp"
 #include "../config_file/config_file.hpp"
 #include "../mesh/mesh.hpp"
-#include "../gauss_quad/gauss_quad.hpp"
-#include "../gauss_quad/integral.hpp"
 #include "../initial/initial.hpp"
 #include "../rhs/rhs.hpp"
 #include "../flux/flux.hpp"
 #include "time_integrator.hpp"
-#include "../state/mesharray.hpp"
 
 namespace DGHydro {
 
@@ -28,17 +23,6 @@ namespace DGHydro {
 
 Simulation::Simulation(char *fileName)
 {
-  /*
-  // Defines number of space dimensions etc
-  const UserSetup setup;
-
-  // Number of degrees of freedom
-  const int nDeg =
-    (setup.nDim == 1)*setup.maxOrder +
-    (setup.nDim == 2)*(setup.maxOrder + 1)*(setup.maxOrder + 2)/2 +
-    (setup.nDim == 3)*(setup.maxOrder + 1)*(setup.maxOrder + 2)*(setup.maxOrder + 3)/6;
-  */
-
   // Initialize fftw3
   //fftw_mpi_init();
 
@@ -59,11 +43,16 @@ Simulation::Simulation(char *fileName)
   std::cout << "Not using MPI\n";
 #endif
 
+  if (rank == 0)
+    std::cout << "Number of space dimensions: " << UserSetup::nDim
+              << "\nNumber of equations: " << UserSetup::nEq
+              << "\nSpace order: " << UserSetup::maxOrder + 1
+              << "\nTime order: " << UserSetup::timeOrder
+              << std::endl;
+
   // Read configuration file
-  ConfigFile *cf;
   try {
     cf = new ConfigFile(fileName, rank);
-    std::cout << "Hallo\n";
     cf->List();
   }
   catch (...) {
@@ -72,7 +61,6 @@ Simulation::Simulation(char *fileName)
   }
 
   // Build mesh
-  Mesh *mesh;
   try {
     mesh = new Mesh(cf);
     mesh->Decompose(rank, num_proc);
@@ -82,32 +70,65 @@ Simulation::Simulation(char *fileName)
     throw std::runtime_error("Could not create simulation");
   }
 
-  State<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim>
-    state(mesh);
-  DynArray<Array<Array<double, UserSetup::nEq>, nDeg>>
-    mesh_state(mesh->Nx*mesh->Ny*mesh->Nz);
-  mesh_state = 0.0;
+  state = new State<UserSetup::nEq,
+                    UserSetup::maxOrder,
+                    UserSetup::nDim>(mesh);
+
+  mesh_state = new DynArray<t_state_deg>(mesh->Nx*mesh->Ny*mesh->Nz);
+  mesh_state[0] = 0.0;
+
+  cfl = cf->GetParameter<double>("courant_number");
 
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
   for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++)
     for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++)
       for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++)
-        mesh_state[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
-          state.DoF(i, j, k, ic);
+        mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
+          state->DoF(i, j, k, ic);
 
+  // Set up right-hand side of d_t U = RHS(t, U)
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
 
-  TimeIntegrator<DynArray<Array<Array<double, UserSetup::nEq>, nDeg>>, UserSetup::timeOrder> ti;
+  // Set up time integrator
+  TimeIntegrator<DynArray<t_state_deg>, UserSetup::timeOrder> ti;
 
+  std::function<DynArray<t_state_deg>(double, DynArray<t_state_deg>)>
+    L = [&rhs](double t, DynArray<t_state_deg> U) -> DynArray<t_state_deg> {
+    return rhs.Calculate(t, U);
+  };
+
+  double time = 0.0;
+  while (time < 1.0) {
+    double timestep = CalcTimeStep();
+
+    ti.TakeStep(time, timestep, mesh_state[0], L);
+
+    time += timestep;
+
+    std::cout << time << std::endl;
+  }
+
+}
+
+Simulation::~Simulation()
+{
+  delete state;
+  delete mesh_state;
+  delete cf;
+  delete mesh;
+}
+
+double Simulation::CalcTimeStep()
+{
   double timestep = 1.0e10;
   Flux<UserSetup::nEq> flux;
   for (int i = mesh->nGhost; i < mesh->Nx - mesh->nGhost; i++) {
     for (int j = mesh->nGhost; j < mesh->Ny - mesh->nGhost; j++) {
       for (int k = mesh->nGhost; k < mesh->Nz - mesh->nGhost; k++) {
         Array<double, UserSetup::nEq> u =
-          state.U(mesh_state[k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
-                  0.0, 0.0, 0.0);
+          state->U(mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
+                   0.0, 0.0, 0.0);
         timestep = std::min(timestep, mesh->dx/flux.max_wave_speed_x(u));
         timestep = std::min(timestep, mesh->dy/flux.max_wave_speed_y(u));
         timestep = std::min(timestep, mesh->dz/flux.max_wave_speed_z(u));
@@ -115,34 +136,8 @@ Simulation::Simulation(char *fileName)
     }
   }
 
-  timestep = cf->GetParameter<double>("courant_number")*timestep;
-
-  std::cout << "Time step: " << timestep << "\n";
-
-  std::function<DynArray<Array<Array<double, UserSetup::nEq>, nDeg>>(double, DynArray<Array<Array<double, UserSetup::nEq>, nDeg>>)> L =
-                [&rhs](double t,
-                       DynArray<Array<Array<double, UserSetup::nEq>, nDeg>> U) -> DynArray<Array<Array<double, UserSetup::nEq>, nDeg>>
-    {
-    return rhs.Calculate(t, U);
-  };
-
-  ti.TakeStep(0.0, timestep, mesh_state, L);
-
-  //double u = 1.0;
-  //for (int i = 0; i < 10; i++)
-  //  ti.TakeStep(0.0, 0.1, u, [](double t, double u){ return u; });
-
-  //std::cout << u << std::endl;
-
-
-  delete cf;
-  delete mesh;
-
+  return cfl*timestep;
 }
 
-Simulation::~Simulation()
-{
-  //delete[] state;
-}
 
 }

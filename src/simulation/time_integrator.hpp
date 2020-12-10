@@ -10,13 +10,13 @@ namespace DGHydro {
     ~TimeIntegrator() {
     };
 
-    //void TakeStep(double start_time, double timestep, T& U, T (*L)(double, T)) {
     void TakeStep(double start_time,
                   double timestep, T& U,
-                  std::function<T(double, T)> L) {
-      if (order == 1) {
+                  std::function<T(double, T)> L)
+    {
+      if (order == 1)
         U += L(start_time, U)*timestep;
-      }
+
       /*
       if (order == 2) {
         T U1 = U + timestep*L(start_time, U);

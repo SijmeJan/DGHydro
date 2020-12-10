@@ -1,7 +1,7 @@
 #ifndef DG_FLUX_HPP
 #define DG_FLUX_HPP
 
-#include "../state/array.hpp"
+#include "../array/array.hpp"
 
 namespace DGHydro {
 
@@ -11,9 +11,16 @@ namespace DGHydro {
     ~UserSetup() {};
 
     const static int nDim = 3;         // Number of space dimensions
-    const static int maxOrder = 1;     // Maximum order of polynomials
+    const static int maxOrder = 0;     // Maximum order of polynomials
     const static int nEq = 1;          // Number of equations
     const static int timeOrder = 1;    // Order of time integration
+
+
+    // Number of degrees of freedom
+    const static int nDeg =
+      (nDim == 1)*maxOrder +
+      (nDim == 2)*(maxOrder + 1)*(maxOrder + 2)/2 +
+      (nDim == 3)*(maxOrder + 1)*(maxOrder + 2)*(maxOrder + 3)/6;
   };
 
   // Scalar advection

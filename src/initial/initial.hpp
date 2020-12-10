@@ -2,9 +2,8 @@
 #define DG_INITIAL_HPP
 
 #include <cmath>
-//#include <vector>
 
-#include "../state/array.hpp"
+#include "../array/array.hpp"
 
 namespace DGHydro {
   class ConfigFile;

@@ -1,24 +1,35 @@
 #ifndef DG_SIMULATION_HPP
 #define DG_SIMULATION_HPP
 
-#include "../state/array.hpp"
+#include "../array/array.hpp"
+#include "../array/dynarray.hpp"
 #include "../flux/flux.hpp"
+#include "../state/state.hpp"
 
 namespace DGHydro {
+  using t_state = Array<double, UserSetup::nEq>;
+  using t_state_deg = Array<Array<double, UserSetup::nEq>, UserSetup::nDeg>;
+
+  class ConfigFile;
+  class Mesh;
+
   class Simulation {
   public:
     Simulation(char *fileName);
     ~Simulation();
 
   private:
-    // Number of degrees of freedom
-    const static int nDeg =
-      (UserSetup::nDim == 1)*UserSetup::maxOrder +
-      (UserSetup::nDim == 2)*(UserSetup::maxOrder + 1)*(UserSetup::maxOrder + 2)/2 +
-      (UserSetup::nDim == 3)*(UserSetup::maxOrder + 1)*(UserSetup::maxOrder + 2)*(UserSetup::maxOrder + 3)/6;
+    ConfigFile *cf;
+    Mesh *mesh;
 
-    //Array<Array<double, UserSetup::nEq>, nDeg> *state;
+    State<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> *state;
 
+    DynArray<t_state_deg> *mesh_state;
+
+    // Courant number
+    double cfl;
+
+    double CalcTimeStep();
   };
 
 }
