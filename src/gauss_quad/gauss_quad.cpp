@@ -46,9 +46,10 @@ void GaussQuad::FindAbscissae()
     double a = -1.0 + i*dx;
     double b = -1.0 + (i + 1)*dx;
 
+    x[i] = 0.0;
+
     // Find zero by bisection
-    for (int N = 0; N < 10000; N++) {
-      //while (1) {
+    while (1) {
       double c = 0.5*(a + b);
 
       double f = boost::math::legendre_p(n, c);
