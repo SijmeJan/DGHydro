@@ -99,7 +99,21 @@ Simulation::Simulation(char *fileName)
         mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
           state->DoF(i, j, k, ic);
 
-  Dump(0);
+  try {
+    Dump(0);
+  }
+  catch (std::exception& e) {
+    std::cout << e.what() << '\n';
+    throw std::runtime_error("Could not create simulation");
+  }
+
+  try {
+    RestoreFromDump(0);
+  }
+  catch (std::exception& e) {
+    std::cout << e.what() << '\n';
+    throw std::runtime_error("Could not create simulation");
+  }
 
   // Set up right-hand side of d_t U = RHS(t, U)
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
@@ -171,6 +185,25 @@ void Simulation::Dump(int nDump)
   wf.close();
   if (!wf.good())
     throw std::runtime_error("Could not write output file!");
+}
+
+void Simulation::RestoreFromDump(int nDump)
+{
+  char fname[15];
+  sprintf(fname, "dump%3.3d.dat", nDump);
+
+  std::ifstream rf(fname, std::ios::in | std::ios::binary);
+  if (!rf)
+    throw std::runtime_error("Can not open dump file for reading!");
+
+  for (int i = mesh->startX; i < mesh->endX; i++)
+    for (int j = mesh->startY; j < mesh->endY; j++)
+      for (int k = mesh->startZ; k < mesh->endZ; k++)
+        rf.read((char *) &mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
+                 sizeof(t_state_deg));
+  rf.close();
+  if (!rf.good())
+    throw std::runtime_error("Could not read dump input file!");
 }
 
 }

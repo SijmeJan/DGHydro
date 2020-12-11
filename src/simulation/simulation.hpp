@@ -31,6 +31,7 @@ namespace DGHydro {
 
     double CalcTimeStep();
     void Dump(int nDump);
+    void RestoreFromDump(int nDump);
 
   };
 
