@@ -198,7 +198,7 @@ void Simulation::RestoreFromDump(int nDump)
   char fname[15];
   sprintf(fname, "dump%3.3d.dat", nDump);
 
-  std::ifstream rf(fname, std::ios::in | std::ios::binary);
+  std::ifstream rf(fname, std::ios::out | std::ios::binary);
   if (!rf)
     throw std::runtime_error("Can not open dump file for reading!");
 
