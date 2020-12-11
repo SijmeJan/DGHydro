@@ -149,7 +149,7 @@ Simulation::Simulation(char *fileName)
     return rhs.Calculate(t, U);
   };
 
-  std::cout << "Starting time loop..\n";
+  std::cout << "Starting time loop..." << std::endl;
 
   double time = 0.0;
   while (time < 1.0) {
