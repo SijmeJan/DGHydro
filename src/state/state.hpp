@@ -28,7 +28,7 @@ namespace DGHydro {
     Array<double, nEq> U(Array<Array<double, nEq>, nDeg>& s,
                          double x, double y, double z) {
       std::cout << "Calculating state..." << std::endl;
-      std::cout << s[0] << " " << s[1] << std::endl;
+      std::cout << s[0][0] << " " << s[1][0] << std::endl;
       std::cout << "Hallo..." << std::endl;
 
       Array<double, nEq> result;
