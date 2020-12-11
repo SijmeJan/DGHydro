@@ -91,7 +91,7 @@ Simulation::Simulation(char *fileName)
 
   cfl = cf->GetParameter<double>("courant_number");
 
-
+  /*
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
   for (int i = mesh->startX; i < mesh->endX; i++)
@@ -107,7 +107,7 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
-
+  */
   try {
     RestoreFromDump(0);
   }
