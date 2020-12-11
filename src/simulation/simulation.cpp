@@ -225,9 +225,9 @@ void Simulation::RestoreFromDump(int nDump)
       for (int k = mesh->startZ; k < mesh->endZ; k++)
         for (int n = 0; n < UserSetup::nDeg; n++) {
           t_state temp;
-          rf.read((char *) &temp, sizeof(t_state));
-          mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n] = temp;
+          rf.read((char *) &temp[0], sizeof(t_state));
           std::cout << "Read index " << index++ << std::endl;
+          mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n] = temp;
         }
 
   rf.close();
