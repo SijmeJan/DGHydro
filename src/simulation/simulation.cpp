@@ -91,7 +91,14 @@ Simulation::Simulation(char *fileName)
 
   cfl = cf->GetParameter<double>("courant_number");
 
-  /*
+  try {
+    RestoreFromDump(0);
+  }
+  catch (std::exception& e) {
+    std::cout << e.what() << '\n';
+    throw std::runtime_error("Could not create simulation");
+  }
+
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
   for (int i = mesh->startX; i < mesh->endX; i++)
@@ -107,7 +114,8 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
-  */
+
+  /*
   try {
     RestoreFromDump(0);
   }
@@ -115,7 +123,7 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
-
+  */
 
   // Set up right-hand side of d_t U = RHS(t, U)
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
