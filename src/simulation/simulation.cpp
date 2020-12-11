@@ -212,9 +212,10 @@ void Simulation::Dump(int nDump)
   for (int i = mesh->startX; i < mesh->endX; i++)
     for (int j = mesh->startY; j < mesh->endY; j++)
       for (int k = mesh->startZ; k < mesh->endZ; k++)
-        for (int n = 0; n < UserSetup::nDeg; n++)
-          wf.write((char *) &mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n],
-                 sizeof(t_state));
+        for (int n = 0; n < UserSetup::nDeg; n++) {
+          t_state temp(mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n]);
+          wf.write((char *) &temp, sizeof(t_state));
+        }
 
   wf.close();
   if (!wf.good())
@@ -235,8 +236,9 @@ void Simulation::RestoreFromDump(int nDump)
     for (int j = mesh->startY; j < mesh->endY; j++)
       for (int k = mesh->startZ; k < mesh->endZ; k++)
         for (int n = 0; n < UserSetup::nDeg; n++) {
-          rf.read((char *) &mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n],
-                  sizeof(t_state));
+          t_state temp;
+          rf.read((char *) &temp, sizeof(t_state));
+          mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n] = temp;
           std::cout << "Read index " << index++ << std::endl;
         }
 
