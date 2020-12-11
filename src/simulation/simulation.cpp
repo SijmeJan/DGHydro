@@ -172,7 +172,7 @@ double Simulation::CalcTimeStep()
   for (int i = mesh->startX; i < mesh->endX; i++) {
     for (int j = mesh->startY; j < mesh->endY; j++) {
       for (int k = mesh->startZ; k < mesh->endZ; k++) {
-        std::cout << "Times step " << i << " " << j << " " << k << "\n";
+        std::cout << "Times step " << i << " " << j << " " << k << std::endl;
         t_state u =
           state->U(mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                    0.0, 0.0, 0.0);
