@@ -198,6 +198,8 @@ void Simulation::Dump(int nDump)
     for (int j = mesh->startY; j < mesh->endY; j++)
       for (int k = mesh->startZ; k < mesh->endZ; k++)
         for (int n = 0; n < UserSetup::nDeg; n++) {
+          std::cout << "Writing " << sizeof(t_state) << " for i = "
+                    << i << ", degree " << n << std::endl;
           t_state temp(mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n]);
           wf.write((char *) &temp, sizeof(t_state));
         }
