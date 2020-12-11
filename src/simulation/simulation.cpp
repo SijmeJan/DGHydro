@@ -140,15 +140,6 @@ Simulation::Simulation(char *fileName)
     return rhs.Calculate(t, U);
   };
 
-  /*
-  std::cout << "Hallo..." << std::endl;
-
-  for (int m = 0; m < UserSetup::nDeg; m++) {
-    for (int n = 0; n < UserSetup::nEq; n++)
-      std::cout << mesh_state[0][1][m][n] << std::endl;
-    std::cout << std::endl;
-  }
-  */
   std::cout << "Starting time loop..." << std::endl;
 
   double time = 0.0;
