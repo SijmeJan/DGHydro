@@ -210,7 +210,7 @@ void Simulation::RestoreFromDump(int nDump)
   if (!rf)
     throw std::runtime_error("Can not open dump file for reading!");
 
-  int index = -1;
+  int index = 0;
   for (int i = mesh->startX; i < mesh->endX; i++)
     for (int j = mesh->startY; j < mesh->endY; j++)
       for (int k = mesh->startZ; k < mesh->endZ; k++)
