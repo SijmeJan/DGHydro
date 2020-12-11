@@ -13,10 +13,8 @@ namespace DGHydro {
   class RightHandSide {
   public:
     RightHandSide(Mesh *mesh) : mesh(mesh) {
-      std::cout << "RHS constructor" << std::endl;
     };
     ~RightHandSide() {
-      std::cout << "RHS deconstructor\n";
     };
 
     // Number of degrees of freedom

@@ -19,7 +19,7 @@ namespace DGHydro {
             if (i + j + k <= nDeg) {
               basisMap.insert({total_number, std::make_tuple(i, j, k)});
 
-              std::cout << "Added " << i << " " << j << " " << k << std::endl;
+              //std::cout << "Added " << i << " " << j << " " << k << std::endl;
               total_number++;
             }
           }
