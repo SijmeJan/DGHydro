@@ -96,14 +96,6 @@ Simulation::Simulation(char *fileName)
             << sizeof(mesh_state[0][0][0]) << " "
             << sizeof(mesh_state[0][0][0][0]) << std::endl;
 
-  try {
-    RestoreFromDump(0);
-  }
-  catch (std::exception& e) {
-    std::cout << e.what() << '\n';
-    throw std::runtime_error("Could not create simulation");
-  }
-
   std::cout << sizeof(mesh_state[0]) << std::endl;
   std::cout << sizeof(mesh_state[0][1]) << std::endl;
   std::cout << sizeof(mesh_state[0][1][0]) << std::endl;
