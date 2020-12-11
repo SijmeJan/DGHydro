@@ -224,9 +224,10 @@ void Simulation::RestoreFromDump(int nDump)
     for (int j = mesh->startY; j < mesh->endY; j++)
       for (int k = mesh->startZ; k < mesh->endZ; k++)
         for (int n = 0; n < UserSetup::nDeg; n++) {
-          t_state temp;
-          rf.read((char *) &temp[0], sizeof(t_state));
-          std::cout << "Read index " << index++ << std::endl;
+          std::cout << "Reading " << sizeof(t_state) << " for i = "
+                    << i << ", degree " << n << std::endl;
+          t_state temp(0.0);
+          rf.read((char *) &temp, sizeof(t_state));
           mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n] = temp;
         }
 
