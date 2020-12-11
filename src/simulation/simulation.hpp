@@ -30,6 +30,8 @@ namespace DGHydro {
     double cfl;
 
     double CalcTimeStep();
+    void Dump(int nDump);
+
   };
 
 }

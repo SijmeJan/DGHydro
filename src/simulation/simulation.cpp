@@ -2,6 +2,7 @@
 #include <mpi.h>
 #endif
 #include <iostream>
+#include <fstream>
 
 #include "../array/array.hpp"
 #include "../array/dynarray.hpp"
@@ -98,6 +99,8 @@ Simulation::Simulation(char *fileName)
         mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
           state->DoF(i, j, k, ic);
 
+  Dump(0);
+
   // Set up right-hand side of d_t U = RHS(t, U)
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
 
@@ -150,5 +153,24 @@ double Simulation::CalcTimeStep()
   return cfl*timestep;
 }
 
+void Simulation::Dump(int nDump)
+{
+  char fname[15];
+  sprintf(fname, "dump%3.3d.dat", nDump);
+
+  std::ofstream wf(fname, std::ios::out | std::ios::binary);
+  if (!wf)
+    throw std::runtime_error("Can not open output file for writing!");
+
+  for (int i = mesh->startX; i < mesh->endX; i++)
+    for (int j = mesh->startY; j < mesh->endY; j++)
+      for (int k = mesh->startZ; k < mesh->endZ; k++)
+        wf.write((char *) &mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
+                 sizeof(t_state_deg));
+
+  wf.close();
+  if (!wf.good())
+    throw std::runtime_error("Could not write output file!");
+}
 
 }
