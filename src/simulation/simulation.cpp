@@ -106,7 +106,7 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
-
+  /*
   try {
     RestoreFromDump(0);
   }
@@ -114,6 +114,7 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
+  */
 
   // Set up right-hand side of d_t U = RHS(t, U)
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
@@ -182,8 +183,9 @@ void Simulation::Dump(int nDump)
   for (int i = mesh->startX; i < mesh->endX; i++)
     for (int j = mesh->startY; j < mesh->endY; j++)
       for (int k = mesh->startZ; k < mesh->endZ; k++)
-        wf.write((char *) &mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
-                 sizeof(t_state_deg));
+        for (int n = 0; n < UserSetup::nDeg; n++)
+          wf.write((char *) &mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n],
+                 sizeof(t_state));
 
   wf.close();
   if (!wf.good())
