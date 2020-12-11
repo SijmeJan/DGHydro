@@ -91,6 +91,7 @@ Simulation::Simulation(char *fileName)
 
   cfl = cf->GetParameter<double>("courant_number");
 
+
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
   for (int i = mesh->startX; i < mesh->endX; i++)
@@ -106,7 +107,7 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
-  /*
+
   try {
     RestoreFromDump(0);
   }
@@ -114,7 +115,7 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
-  */
+
 
   // Set up right-hand side of d_t U = RHS(t, U)
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
@@ -204,8 +205,9 @@ void Simulation::RestoreFromDump(int nDump)
   for (int i = mesh->startX; i < mesh->endX; i++)
     for (int j = mesh->startY; j < mesh->endY; j++)
       for (int k = mesh->startZ; k < mesh->endZ; k++)
-        rf.read((char *) &mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
-                 sizeof(t_state_deg));
+        for (int n = 0; n < UserSetup::nDeg; n++)
+          rf.read((char *) &mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n],
+                  sizeof(t_state));
   rf.close();
   if (!rf.good())
     throw std::runtime_error("Could not read dump input file!");
