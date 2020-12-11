@@ -136,7 +136,7 @@ Simulation::Simulation(char *fileName)
     return rhs.Calculate(t, U);
   };
 
-  std::cout << mesh_state[0][0][0] << std::endl;
+  std::cout << mesh_state[0][0][0][0] << std::endl;
   std::cout << "Starting time loop..." << std::endl;
 
   double time = 0.0;
