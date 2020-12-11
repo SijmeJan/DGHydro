@@ -162,7 +162,7 @@ Simulation::Simulation(char *fileName)
 
   double time = 0.0;
   while (time < 1.0) {
-    double timestep = CalcTimeStep();
+    double timestep = 0.01 ;//CalcTimeStep();
 
     ti.TakeStep(time, timestep, mesh_state[0], L);
 
