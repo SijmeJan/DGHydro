@@ -109,7 +109,6 @@ Simulation::Simulation(char *fileName)
         mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
           state->DoF(i, j, k, ic);
 
-  /*
   try {
     Dump(0);
   }
@@ -117,7 +116,6 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
-  */
 
   /*
   try {
@@ -184,7 +182,7 @@ double Simulation::CalcTimeStep()
 
   return cfl*timestep;
 }
-  /*
+
 void Simulation::Dump(int nDump)
 {
   char fname[15];
@@ -234,5 +232,5 @@ void Simulation::RestoreFromDump(int nDump)
   if (!rf.good())
     throw std::runtime_error("Could not read dump input file!");
 }
-  */
+
 }
