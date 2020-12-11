@@ -227,7 +227,10 @@ void Simulation::RestoreFromDump(int nDump)
           std::cout << "Reading " << sizeof(t_state) << " for i = "
                     << i << ", degree " << n << std::endl;
           t_state temp(0.0);
-          rf.read((char *) temp, sizeof(t_state));
+          std::cout << sizeof(temp) << std::endl;
+          rf.read((char *) &temp, sizeof(t_state));
+          std::cout << sizeof(temp) << std::endl;
+
           mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n] = temp;
         }
 
