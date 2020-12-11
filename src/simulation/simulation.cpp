@@ -144,6 +144,8 @@ Simulation::Simulation(char *fileName)
     return rhs.Calculate(t, U);
   };
 
+  std::cout << "Starting time loop..\n";
+
   double time = 0.0;
   while (time < 1.0) {
     double timestep = CalcTimeStep();
