@@ -91,6 +91,8 @@ Simulation::Simulation(char *fileName)
 
   cfl = cf->GetParameter<double>("courant_number");
 
+  std:: cout << "Restoring from dump...\n";
+
   try {
     RestoreFromDump(0);
   }
@@ -98,6 +100,8 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
+
+  std:: cout << "Initial conditions...\n";
 
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
@@ -107,6 +111,8 @@ Simulation::Simulation(char *fileName)
         mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
           state->DoF(i, j, k, ic);
 
+  std:: cout << "Saving to dump...\n";
+
   try {
     Dump(0);
   }
@@ -114,6 +120,8 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
+
+  std::cout << "Done\n";
 
   /*
   try {
