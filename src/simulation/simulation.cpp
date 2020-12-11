@@ -91,8 +91,6 @@ Simulation::Simulation(char *fileName)
 
   cfl = cf->GetParameter<double>("courant_number");
 
-  std:: cout << "Restoring from dump...\n";
-
   try {
     RestoreFromDump(0);
   }
@@ -100,8 +98,6 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
-
-  std:: cout << "Initial conditions...\n";
 
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
@@ -111,8 +107,6 @@ Simulation::Simulation(char *fileName)
         mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
           state->DoF(i, j, k, ic);
 
-  std:: cout << "Saving to dump...\n";
-
   try {
     Dump(0);
   }
@@ -120,8 +114,6 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
-
-  std::cout << "Done\n";
 
   /*
   try {
@@ -132,23 +124,19 @@ Simulation::Simulation(char *fileName)
     throw std::runtime_error("Could not create simulation");
   }
   */
-  std::cout << "Watte\n";
 
   // Set up right-hand side of d_t U = RHS(t, U)
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
 
-  std::cout << "Hallo" << std::endl;
-
   // Set up time integrator
   TimeIntegrator<DynArray<t_state_deg>, UserSetup::timeOrder> ti;
-
-  std::cout << "Doei\n";
 
   std::function<DynArray<t_state_deg>(double, DynArray<t_state_deg>)>
     L = [&rhs](double t, DynArray<t_state_deg> U) -> DynArray<t_state_deg> {
     return rhs.Calculate(t, U);
   };
 
+  std::cout << mesh_state[0][0][0] << std::endl;
   std::cout << "Starting time loop..." << std::endl;
 
   double time = 0.0;
