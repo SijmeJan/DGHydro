@@ -91,6 +91,11 @@ Simulation::Simulation(char *fileName)
 
   cfl = cf->GetParameter<double>("courant_number");
 
+  std::cout << sizeof(mesh_state[0]) << " "
+            << sizeof(mesh_state[0][0]) << " "
+            << sizeof(mesh_state[0][0][0]) << " "
+            << sizeof(mesh_state[0][0][0][0]) << std::endl;
+
   try {
     RestoreFromDump(0);
   }
@@ -98,6 +103,11 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
+
+  std::cout << sizeof(mesh_state[0]) << std::endl;
+  std::cout << sizeof(mesh_state[0][1]) << std::endl;
+  std::cout << sizeof(mesh_state[0][1][0]) << std::endl;
+  std::cout << sizeof(mesh_state[0][1][0][0]) << std::endl;
 
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
