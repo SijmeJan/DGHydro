@@ -150,7 +150,7 @@ Simulation::Simulation(char *fileName)
 
   for (int m = 0; m < UserSetup::nDeg; m++) {
     for (int n = 0; n < UserSetup::nEq; n++)
-      std::cout << mesh_state[0][1][m][n] << " ";
+      std::cout << mesh_state[0][1][m][n] << std::endl;
     std::cout << std::endl;
   }
 
