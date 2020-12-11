@@ -136,8 +136,12 @@ Simulation::Simulation(char *fileName)
   // Set up right-hand side of d_t U = RHS(t, U)
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
 
+  std::cout << "Hallo\n";
+
   // Set up time integrator
   TimeIntegrator<DynArray<t_state_deg>, UserSetup::timeOrder> ti;
+
+  std::cout << "Doei\n";
 
   std::function<DynArray<t_state_deg>(double, DynArray<t_state_deg>)>
     L = [&rhs](double t, DynArray<t_state_deg> U) -> DynArray<t_state_deg> {
