@@ -11,6 +11,8 @@ namespace DGHydro {
   class BasisFunctions {
   public:
     BasisFunctions() {
+      std::cout << "Basisfunction constructor\n";
+
       total_number = 0;
 
       for (int i = 0; i <= nDeg; i++) {
@@ -25,6 +27,7 @@ namespace DGHydro {
           }
         }
       }
+      std::cout << "End of basisfunction constructor\n";
     };
 
     ~BasisFunctions(void) {};
