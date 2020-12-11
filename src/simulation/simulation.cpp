@@ -132,6 +132,7 @@ Simulation::Simulation(char *fileName)
     throw std::runtime_error("Could not create simulation");
   }
   */
+  std::cout << "Watte\n";
 
   // Set up right-hand side of d_t U = RHS(t, U)
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
