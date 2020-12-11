@@ -201,6 +201,7 @@ void Simulation::Dump(int nDump)
         for (int n = 0; n < UserSetup::nDeg; n++) {
           std::cout << "Writing " << sizeof(t_state) << " for i = "
                     << i << ", degree " << n << std::endl;
+          std::cout << "t = " << temp[0] << std::endl;
           t_state temp(mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n]);
           wf.write((char *) &temp[0], sizeof(t_state));
         }
@@ -227,6 +228,9 @@ void Simulation::RestoreFromDump(int nDump)
           t_state temp(0.0);
           rf.read((char *) &temp[0], sizeof(t_state));
           mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][n] = temp;
+          std::cout << "Reading " << sizeof(t_state) << " for i = "
+                    << i << ", degree " << n << std::endl;
+          std::cout << "t = " << temp[0] << std::endl;
         }
 
   rf.close();
