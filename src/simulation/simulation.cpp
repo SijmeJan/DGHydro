@@ -191,7 +191,7 @@ double Simulation::CalcTimeStep()
 
   return cfl*timestep;
 }
-
+  /*
 void Simulation::Dump(int nDump)
 {
   char fname[15];
@@ -241,5 +241,5 @@ void Simulation::RestoreFromDump(int nDump)
   if (!rf.good())
     throw std::runtime_error("Could not read dump input file!");
 }
-
+  */
 }
