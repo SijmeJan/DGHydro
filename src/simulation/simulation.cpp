@@ -176,6 +176,9 @@ void Simulation::Dump(int nDump)
   if (!wf)
     throw std::runtime_error("Can not open output file for writing!");
 
+  std::cout << "Size of state: " << sizeof(t_state_deg)
+            << " " << sizeof(double)
+            << " " << UserSetup::nDeg << std::endl;
   for (int i = mesh->startX; i < mesh->endX; i++)
     for (int j = mesh->startY; j < mesh->endY; j++)
       for (int k = mesh->startZ; k < mesh->endZ; k++)
