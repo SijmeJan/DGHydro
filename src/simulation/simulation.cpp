@@ -137,7 +137,7 @@ Simulation::Simulation(char *fileName)
   // Set up right-hand side of d_t U = RHS(t, U)
   RightHandSide<UserSetup::nEq, UserSetup::maxOrder, UserSetup::nDim> rhs(mesh);
 
-  std::cout << "Hallo\n";
+  std::cout << "Hallo" << std::endl;
 
   // Set up time integrator
   TimeIntegrator<DynArray<t_state_deg>, UserSetup::timeOrder> ti;
