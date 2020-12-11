@@ -91,7 +91,7 @@ Simulation::Simulation(char *fileName)
 
   cfl = cf->GetParameter<double>("courant_number");
 
-  /*
+
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
   for (int i = mesh->startX; i < mesh->endX; i++)
@@ -99,7 +99,7 @@ Simulation::Simulation(char *fileName)
       for (int k = mesh->startZ; k < mesh->endZ; k++)
         mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
           state->DoF(i, j, k, ic);
-
+  /*
   try {
     Dump(0);
   }
