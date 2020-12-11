@@ -91,11 +91,6 @@ Simulation::Simulation(char *fileName)
 
   cfl = cf->GetParameter<double>("courant_number");
 
-  std::cout << sizeof(mesh_state[0]) << " "
-            << sizeof(mesh_state[0][0]) << " "
-            << sizeof(mesh_state[0][0][0]) << " "
-            << sizeof(mesh_state[0][0][0][0]) << std::endl;
-
   /*
   try {
     RestoreFromDump(0);
@@ -105,11 +100,6 @@ Simulation::Simulation(char *fileName)
     throw std::runtime_error("Could not create simulation");
   }
   */
-
-  std::cout << sizeof(mesh_state[0]) << std::endl;
-  std::cout << sizeof(mesh_state[0][1]) << std::endl;
-  std::cout << sizeof(mesh_state[0][1][0]) << std::endl;
-  std::cout << sizeof(mesh_state[0][1][0][0]) << std::endl;
 
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
@@ -150,6 +140,7 @@ Simulation::Simulation(char *fileName)
     return rhs.Calculate(t, U);
   };
 
+  /*
   std::cout << "Hallo..." << std::endl;
 
   for (int m = 0; m < UserSetup::nDeg; m++) {
@@ -157,12 +148,12 @@ Simulation::Simulation(char *fileName)
       std::cout << mesh_state[0][1][m][n] << std::endl;
     std::cout << std::endl;
   }
-
+  */
   std::cout << "Starting time loop..." << std::endl;
 
   double time = 0.0;
   while (time < 1.0) {
-    double timestep = 0.01 ;//CalcTimeStep();
+    double timestep = CalcTimeStep();
 
     ti.TakeStep(time, timestep, mesh_state[0], L);
 
