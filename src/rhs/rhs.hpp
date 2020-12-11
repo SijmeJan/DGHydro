@@ -32,6 +32,8 @@ namespace DGHydro {
         DynArray<t_state_deg>(mesh->Nx*mesh->Ny*mesh->Nz);
       data = 0.0;
 
+      SetBoundaries(U);
+
       for (int i = mesh->startX; i < mesh->endX; i++)
         for (int j = mesh->startY; j < mesh->endY; j++)
           for (int k = mesh->startZ; k < mesh->endZ; k++)
@@ -66,6 +68,60 @@ namespace DGHydro {
 
       return data;
     }
+
+
+  private:
+    Flux<nEq> flux;
+    BasisFunctions<nDim, maxOrder> bf;
+    CubeIntegral<t_state, maxOrder + 1> ci;
+
+    Mesh *mesh;
+
+    // Calculate state from degrees of freedom
+    t_state U(t_state_deg& s, double x, double y, double z) {
+      t_state result;
+      result = s[0]*bf(0, x, y, z);
+
+      // Sum of components times basis function
+      for (int j = 1; j < nDeg; j++)
+        result += s[j]*bf(j, x, y, z);
+
+      result *= (1 << nDim);
+
+      return result;
+    }
+
+    // LLF interface flux x
+    t_state Fint_x(t_state_deg& sL, t_state_deg& sR,
+                   double y, double z) {
+      t_state UL = U(sL, 1, y, z);
+      t_state UR = U(sR, -1, y, z);
+
+      double lambda = std::max(flux.max_wave_speed_x(UL),
+                               flux.max_wave_speed_x(UR));
+      return 0.5*(flux.x(UR) + flux.x(UL) - lambda*(UR - UL));
+    }
+    // LLF interface flux y
+    t_state Fint_y(t_state_deg& sL, t_state_deg& sR,
+                   double x, double z) {
+      t_state UL = U(sL, x, 1, z);
+      t_state UR = U(sR, x, -1, z);
+
+      double lambda = std::max(flux.max_wave_speed_y(UL),
+                               flux.max_wave_speed_y(UR));
+      return 0.5*(flux.y(UR) + flux.y(UL) - lambda*(UR - UL));
+    }
+    // LLF interface flux z
+    t_state Fint_z(t_state_deg& sL, t_state_deg& sR,
+                   double x, double y) {
+      t_state UL = U(sL, x, y, 1);
+      t_state UR = U(sR, x, y, -1);
+
+      double lambda = std::max(flux.max_wave_speed_z(UL),
+                               flux.max_wave_speed_z(UR));
+      return 0.5*(flux.z(UR) + flux.z(UL) - lambda*(UR - UL));
+    }
+
 
     t_state_deg SurfaceFluxIntegralX(t_state_deg& s,
                                      t_state_deg& sL,
@@ -210,56 +266,41 @@ namespace DGHydro {
       return result;
     };
 
-  private:
-    Flux<nEq> flux;
-    BasisFunctions<nDim, maxOrder> bf;
-    CubeIntegral<t_state, maxOrder + 1> ci;
+    void SetBoundaries(DynArray<t_state_deg>& U) {
+      // Periodic x boundary
+      for (int j = mesh->startY; j < mesh->endY; j++) {
+        for (int k = mesh->startZ; k < mesh->endZ; k++) {
+          U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + 0] =
+            U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + mesh->Nx - 2];
 
-    Mesh *mesh;
+          U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + mesh->Nx - 1] =
+            U[k*mesh->Nx*mesh->Ny + j*mesh->Nx + 1];
+        }
+      }
 
-    // Calculate state from degrees of freedom
-    t_state U(t_state_deg& s, double x, double y, double z) {
-      t_state result;
-      result = s[0]*bf(0, x, y, z);
+      if (nDim > 1) {
+        for (int i = mesh->startX; i < mesh->endX; i++) {
+          for (int k = mesh->startZ; k < mesh->endZ; k++) {
+            U[k*mesh->Nx*mesh->Ny + 0*mesh->Nx + i] =
+              U[k*mesh->Nx*mesh->Ny + (mesh->Ny-2)*mesh->Nx + i];
 
-      // Sum of components times basis function
-      for (int j = 1; j < nDeg; j++)
-        result += s[j]*bf(j, x, y, z);
+            U[k*mesh->Nx*mesh->Ny + (mesh->Ny-1)*mesh->Nx + i] =
+              U[k*mesh->Nx*mesh->Ny + 1*mesh->Nx + i];
+          }
+        }
+      }
 
-      result *= (1 << nDim);
+      if (nDim > 2) {
+        for (int i = mesh->startX; i < mesh->endX; i++) {
+          for (int j = mesh->startY; j < mesh->endY; j++) {
+            U[0*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
+              U[(mesh->Nz-2)*mesh->Nx*mesh->Ny + j*mesh->Nx + i];
 
-      return result;
-    }
-
-    // LLF interface flux x
-    t_state Fint_x(t_state_deg& sL, t_state_deg& sR,
-                   double y, double z) {
-      t_state UL = U(sL, 1, y, z);
-      t_state UR = U(sR, -1, y, z);
-
-      double lambda = std::max(flux.max_wave_speed_x(UL),
-                               flux.max_wave_speed_x(UR));
-      return 0.5*(flux.x(UR) + flux.x(UL) - lambda*(UR - UL));
-    }
-    // LLF interface flux y
-    t_state Fint_y(t_state_deg& sL, t_state_deg& sR,
-                   double x, double z) {
-      t_state UL = U(sL, x, 1, z);
-      t_state UR = U(sR, x, -1, z);
-
-      double lambda = std::max(flux.max_wave_speed_y(UL),
-                               flux.max_wave_speed_y(UR));
-      return 0.5*(flux.y(UR) + flux.y(UL) - lambda*(UR - UL));
-    }
-    // LLF interface flux z
-    t_state Fint_z(t_state_deg& sL, t_state_deg& sR,
-                   double x, double y) {
-      t_state UL = U(sL, x, y, 1);
-      t_state UR = U(sR, x, y, -1);
-
-      double lambda = std::max(flux.max_wave_speed_z(UL),
-                               flux.max_wave_speed_z(UR));
-      return 0.5*(flux.z(UR) + flux.z(UL) - lambda*(UR - UL));
+            U[(mesh->Nz-1)*mesh->Nx*mesh->Ny + j*mesh->Nx + i] =
+              U[1*mesh->Nx*mesh->Ny + j*mesh->Nx + i];
+          }
+        }
+      }
     }
 
   };
