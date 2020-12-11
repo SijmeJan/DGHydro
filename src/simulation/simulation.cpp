@@ -91,7 +91,7 @@ Simulation::Simulation(char *fileName)
 
   cfl = cf->GetParameter<double>("courant_number");
 
-  /*
+
   try {
     RestoreFromDump(0);
   }
@@ -99,7 +99,7 @@ Simulation::Simulation(char *fileName)
     std::cout << e.what() << '\n';
     throw std::runtime_error("Could not create simulation");
   }
-  */
+
 
   // Set initial conditions
   InitialConditions<UserSetup::nEq> ic(cf);
