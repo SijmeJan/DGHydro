@@ -138,7 +138,7 @@ Simulation::Simulation(char *fileName)
 
   for (int m = 0; m < UserSetup::nDeg; m++) {
     for (int n = 0; n < UserSetup::nEq; n++)
-      std::cout << mesh_state[0][0][m][n] << " ";
+      std::cout << mesh_state[0][1][m][n] << " ";
     std::cout << std::endl;
   }
 
@@ -172,11 +172,6 @@ double Simulation::CalcTimeStep()
   for (int i = mesh->startX; i < mesh->endX; i++) {
     for (int j = mesh->startY; j < mesh->endY; j++) {
       for (int k = mesh->startZ; k < mesh->endZ; k++) {
-        std::cout << mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][0][0]
-                  << " "
-                  << mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i][1][0]
-                  << std::endl;
-        std::cout << "Time step " << i << " " << j << " " << k << std::endl;
         t_state u =
           state->U(mesh_state[0][k*mesh->Nx*mesh->Ny + j*mesh->Nx + i],
                    0.0, 0.0, 0.0);
