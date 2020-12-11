@@ -27,7 +27,7 @@ namespace DGHydro {
           }
         }
       }
-      std::cout << "End of basisfunction constructor\n";
+      std::cout << "End of basisfunction constructor\n" << std::endl;
     };
 
     ~BasisFunctions(void) {};
