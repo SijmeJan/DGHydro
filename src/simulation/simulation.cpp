@@ -229,7 +229,7 @@ void Simulation::RestoreFromDump(int nDump)
           t_state temp(0.0);
           std::cout << sizeof(temp) << " "
                     << temp[0] << std::endl;
-          rf.read((char *) &temp, sizeof(t_state));
+          rf.read((char *) &temp[0], sizeof(t_state));
           std::cout << sizeof(temp) << " "
                     << temp[0] << std::endl;
 
