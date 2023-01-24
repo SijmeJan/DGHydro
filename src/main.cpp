@@ -1,6 +1,6 @@
 #include <iostream>
 
-//#include <Kokkos_Core.hpp>
+#include <Kokkos_Core.hpp>
 #include "DGConfig.h"
 
 int main( int argc, char* argv[] ) {
@@ -19,13 +19,13 @@ int main( int argc, char* argv[] ) {
     }
 #endif
 
-    //if(initKokkosBeforeMPI)  Kokkos::initialize( argc, argv );
+    if(initKokkosBeforeMPI)  Kokkos::initialize( argc, argv );
 
 #ifdef WITH_MPI
     MPI_Init(&argc,&argv);
 #endif
 
-    //if(!initKokkosBeforeMPI) Kokkos::initialize( argc, argv );
+    if(!initKokkosBeforeMPI) Kokkos::initialize( argc, argv );
 
     return 0;
 }
