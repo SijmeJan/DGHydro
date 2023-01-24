@@ -1,0 +1,3 @@
+// the configured options and settings
+#define DGHYDRO_VERSION_MAJOR @DGHydro_VERSION_MAJOR@
+#define DGHYDRO_VERSION_MINOR @DGHydro_VERSION_MINOR@
